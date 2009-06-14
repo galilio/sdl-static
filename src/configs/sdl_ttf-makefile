@@ -1,0 +1,8 @@
+all:libSDL_ttf.a
+
+
+libSDL_ttf.a: SDL_ttf.o
+	ar -cr libSDL_ttf.a SDL_ttf.o
+
+%.o:%.c
+	gcc -O2 -I../../include $< -c

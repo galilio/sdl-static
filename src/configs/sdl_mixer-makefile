@@ -1,0 +1,22 @@
+all:libSDL_mixer.a
+
+SOURCE := \
+./effect_position.c ./effect_stereoreverse.c music_ogg.c dynamic_ogg.c load_ogg.c ./effects_internal.c ./load_aiff.c ./load_voc.c ./mixer.c ./music.c ./music_cmd.c ./wavestream.c $(wildcard ./mikmod/*.c) $(wildcard ./timidity/*.c) $(wildcard ./native_midi/*.c)
+
+
+
+OBJS := $(SOURCE:%.c=%.o)
+
+libSDL_mixer.a: $(OBJS)
+	ar -cr libSDL_mixer.a $(OBJS)
+
+CONFIG := \
+   -Imikmod \
+   -DOGG_MUSIC
+
+%.o:%.c
+	gcc -O2 $(CONFIG) -I../../include $< -c -o$@
+
+
+clean:
+	rm -f $(OBJS)
