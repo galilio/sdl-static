@@ -1,8 +1,8 @@
-all:libSDL_ttf.a
+all:libSDL_ttf$(SS_LIBEXT)
 
 
-libSDL_ttf.a: SDL_ttf.o
-	ar -cr libSDL_ttf.a SDL_ttf.o
+libSDL_ttf$(SS_LIBEXT): SDL_ttf$(SS_OBJEXT)
+	$(SS_CREATELIB)libSDL_ttf$(SS_LIBEXT) SDL_ttf$(SS_OBJEXT)
 
-%.o:%.c
-	gcc -O2 -I../../include $< -c
+%$(SS_OBJEXT):%.c
+	$(SS_CC) -O2 -I../../include $< -c
