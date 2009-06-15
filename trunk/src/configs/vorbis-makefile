@@ -8,13 +8,13 @@ VORBIS_SRC := \
         vorbisenc.c
 
 
-VORBIS_OBJS := $(VORBIS_SRC:%.c=%.o)
+VORBIS_OBJS := $(VORBIS_SRC:%.c=%$(SS_OBJEXT))
 
-libvorbis.a:$(VORBIS_OBJS)
-	ar -cr libvorbis.a $(VORBIS_OBJS)
+libvorbis$(SS_LIBEXT):$(VORBIS_OBJS)
+	$(SS_CREATELIB)$@ $(VORBIS_OBJS)
 
-%.o:lib/%.c
-	gcc -O2 $< -c -o$@ -Iinclude -Ilib -I../../include 
+%$(SS_OBJEXT):lib/%.c
+	$(SS_CC) -O2 $< -c $(SS_OBJOUT)$@ -Iinclude -Ilib -I../../include 
 
 clean:
 	rm -f $(VORBIS_OBJS)
