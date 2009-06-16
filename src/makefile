@@ -1,4 +1,4 @@
-.PHONY: clean zlib jpeg ogg vorbis freetype sdl sdl_ttf sdl_image sdl_mixer
+.PHONY: clean zlib jpeg ogg vorbis freetype sdl sdl_ttf sdl_image sdl_mixer always
 
 OS := $(OSTYPE)
 OS := $(OS:darwin%=darwin)
@@ -8,11 +8,13 @@ OS := $(OS:Windows%=windows)
 
 SS_LIBEXT := .a
 SS_OBJEXT := .o
-SS_CC := gcc
+SS_CC := gcc -O2
 SS_OBJOUT := -o
 EMPTY := 
 SPACE :=  $(EMPTY) $(EMPTY)
 SS_CREATELIB := ar -cr$(SPACE)
+SDL_INC := ../include/SDL12
+SDL := SDL-1.2.13
 
 ifeq ("$(OS)","darwin")
   SS_MAC := 1
@@ -24,6 +26,8 @@ endif
 ifeq ("$(OS)","iphone")
   SS_IPHONE := 1
   JCONFIG := jconfig.mac
+  SDL_INC := ../include/SDL13
+  SDL := SDL-1.3.0-4563
 endif
 
 ifeq ("$(OS)","linux")
@@ -40,7 +44,7 @@ ifeq ("$(OS)","windows")
   LIB_DIR := ../lib/win32
   SS_LIBEXT := .lib
   JCONFIG := jconfig.vc
-  SS_CC := cl.exe -nologo -MT
+  SS_CC := cl.exe -nologo -MT -Zi -O2
   SS_OBJEXT := .obj
   SS_OBJOUT := -Fo
   SS_CREATELIB := lib -out:
@@ -53,6 +57,7 @@ export SS_OBJOUT
 export SS_OBJEXT
 export SS_CREATELIB
 export SS_LIBEXT
+export SDL_INC
 
 all: zlib png jpeg ogg vorbis freetype sdl sdl_ttf sdl_image sdl_mixer
 
@@ -64,6 +69,7 @@ zlib:$(ZLIB)
 $(ZLIB):
 	tar xvzf tars/$(ZLIB).tgz
 ifdef SS_WINDOWS
+	cp patches/zlib/Makefile.msc $(ZLIB)/win32
 	cd $(ZLIB); unset MAKEFLAGS; nmake -f win32/Makefile.msc
 	cp $(ZLIB)/zlib$(SS_LIBEXT) $(LIB_DIR)
 else
@@ -176,14 +182,22 @@ clean::
 
 # --- SDL ------------------------
 
+ifdef SS_WINDOWS
+SDL := SDL-1.2.13
+	#cp patches/SDL/SDL_win32window.c $(SDL)/src/video/win32
+	#cp patches/SDL/SDL_sysvideo.h $(SDL)/src/video
+	#cp patches/SDL/SDL_atomic.h $(SDL)/include
+SDL_INC := ../include/SDL12
+else
 SDL := SDL-1.3.0-4563
+SDL_INC := ../include/SDL13
+endif
 
 sdl:$(SDL)
 
 $(SDL):
 	tar xzf tars/$(SDL).tgz
-	cp patches/SDL/SDL_win32window.c $(SDL)/src/video/win32
-	cp patches/SDL/SDL_sysvideo.h $(SDL)/src/video
+	mkdir -p $(SDL_INC)
 ifdef SS_WINDOWS
 	cp configs/sdl-makefile $(SDL)/Makefile
 	cd $(SDL); make
@@ -195,7 +209,7 @@ else
 	cp $(SDL)/build/.libs/libSDL.a $(LIB_DIR)
 	cp $(SDL)/build/libSDLmain.a $(LIB_DIR)
 endif
-	cp $(SDL)/include/*.h ../include
+	cp $(SDL)/include/*.h $(SDL_INC)
 
 clean::
 	rm -rf $(SDL)

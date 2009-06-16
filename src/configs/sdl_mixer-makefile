@@ -17,7 +17,7 @@ CONFIG := \
 	-D__STDC__
 
 %$(SS_OBJEXT):%.c
-	$(SS_CC) -O2 $(CONFIG) -I../../include $< -c $(SS_OBJOUT)$@
+	$(SS_CC) -O2 $(CONFIG) -I../../include -I../$(SDL_INC) $< -c $(SS_OBJOUT)$@
 
 
 clean:
