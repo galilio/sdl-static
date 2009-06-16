@@ -239,10 +239,8 @@ SDL_MIXER := SDL_mixer-1.2.8
 
 sdl_mixer:$(SDL_MIXER)
 
-poo:
-
-$(SDL_MIXER):poo
-	#tar xvzf tars/$(SDL_MIXER).tgz
+$(SDL_MIXER):
+	tar xvzf tars/$(SDL_MIXER).tgz
 	cp configs/sdl_mixer-makefile $(SDL_MIXER)/Makefile
 	cp patches/SDL_mixer/mixer.c $(SDL_MIXER)
 	cp patches/SDL_mixer/SDL_mixer.h $(SDL_MIXER)
