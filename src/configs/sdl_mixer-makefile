@@ -20,9 +20,7 @@ CONFIG := \
 	-DUSE_NATIVE_MIDI \
 	-DMOD_MISIC \
 	-DMOD_MISIC \
-	-DMP3_MUSIC \
-	-DMP3_DYNAMIC=\"smpeg$(SS_DLLEXT)\" \
-	-D__STDC__
+	-DMP3_MUSIC
 
 %$(SS_OBJEXT):%.c
 	$(SS_CC) -O2 $(CONFIG) -I../../include -Inative_midi -I../$(SDL_INC) $< -c $(SS_OBJOUT)$@
