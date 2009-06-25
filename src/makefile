@@ -21,6 +21,7 @@ ifeq ("$(OS)","darwin")
   SS_CONGIG := mac
   LIB_DIR := ../lib/mac
   JCONFIG := jconfig.mac
+  SS_DLLEXT := ".dylib"
 endif
 
 ifeq ("$(OS)","iphone")
@@ -28,13 +29,15 @@ ifeq ("$(OS)","iphone")
   JCONFIG := jconfig.mac
   SDL_INC := ../include/SDL13
   SDL := SDL-1.3.0-4563
+  SS_DLLEXT := ".dylib"
 endif
 
 ifeq ("$(OS)","linux")
   SS_CONGIG := linux
   LIB_DIR := ../lib/linux32
   SS_LINUX := 1
-  JCONFIG := jconfig.mac
+  JCONFIG := jconfig.linux
+  SS_DLLEXT := ".dso"
 endif
 
 
@@ -48,6 +51,7 @@ ifeq ("$(OS)","windows")
   SS_OBJEXT := .obj
   SS_OBJOUT := -Fo
   SS_CREATELIB := lib -out:
+  SS_DLLEXT := ".dll"
 endif
 
 
@@ -57,6 +61,7 @@ export SS_OBJOUT
 export SS_OBJEXT
 export SS_CREATELIB
 export SS_LIBEXT
+export SS_DLLEXT
 export SDL_INC
 
 all: zlib png jpeg ogg vorbis freetype sdl sdl_ttf sdl_image sdl_mixer
