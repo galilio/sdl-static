@@ -15,13 +15,14 @@ SPACE :=  $(EMPTY) $(EMPTY)
 SS_CREATELIB := ar -cr$(SPACE)
 SDL_INC := ../include/SDL12
 SDL := SDL-1.2.13
+SS_CREATEDLL := gcc -dynamic -fPIC -o 
 
 ifeq ("$(OS)","darwin")
   SS_MAC := 1
   SS_CONGIG := mac
   LIB_DIR := ../lib/mac
   JCONFIG := jconfig.mac
-  SS_DLLEXT := ".dylib"
+  SS_DLLEXT := .dylib
 endif
 
 ifeq ("$(OS)","iphone")
@@ -29,7 +30,7 @@ ifeq ("$(OS)","iphone")
   JCONFIG := jconfig.mac
   SDL_INC := ../include/SDL13
   SDL := SDL-1.3.0-4563
-  SS_DLLEXT := ".dylib"
+  SS_DLLEXT := .dylib
 endif
 
 ifeq ("$(OS)","linux")
@@ -37,7 +38,7 @@ ifeq ("$(OS)","linux")
   LIB_DIR := ../lib/linux32
   SS_LINUX := 1
   JCONFIG := jconfig.linux
-  SS_DLLEXT := ".dso"
+  SS_DLLEXT := .dso
 endif
 
 
@@ -51,7 +52,7 @@ ifeq ("$(OS)","windows")
   SS_OBJEXT := .obj
   SS_OBJOUT := -Fo
   SS_CREATELIB := lib -out:
-  SS_DLLEXT := ".dll"
+  SS_DLLEXT := .dll
 endif
 
 
@@ -62,9 +63,10 @@ export SS_OBJEXT
 export SS_CREATELIB
 export SS_LIBEXT
 export SS_DLLEXT
+export SS_CREATEDLL
 export SDL_INC
 
-all: zlib png jpeg ogg vorbis freetype sdl sdl_ttf sdl_image sdl_mixer
+all: zlib png jpeg ogg vorbis freetype smpeg sdl sdl_ttf sdl_image sdl_mixer
 
 # --- ZLIB ------------------------
 ZLIB := zlib-1.2.3
@@ -136,6 +138,7 @@ ogg:$(OGG)
 
 $(OGG):
 	tar xvzf tars/$(OGG).tgz
+	cp configs/ogg-config_types.h $(OGG)/include/ogg/config_types.h
 	cp configs/ogg-makefile $(OGG)/Makefile
 	cd $(OGG); unset MAKEFLAGS; make
 	cp $(OGG)/libogg$(SS_LIBEXT) $(LIB_DIR)
@@ -184,6 +187,25 @@ $(FREETYPE):
 
 clean::
 	rm -rf $(FREETYPE)
+
+# --- SMPEG ------------------------
+
+SMPEG := smpeg
+
+#smpeg:$(SMPEG)
+
+$(SMPEG):
+	tar xvzf tars/$(SMPEG).tgz
+	cp configs/smpeg-makefile $(SMPEG)/Makefile
+	cd $(SMPEG); make
+	cp $(SMPEG)/libsmpeg$(SS_LIBEXT) $(LIB_DIR)
+	cp $(SMPEG)/smpeg.h $(SMPEG)/MPEGfilter.h ../include/
+
+clean::
+	rm -rf $(SMPEG)
+
+
+
 
 # --- SDL ------------------------
 
