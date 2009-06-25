@@ -19,7 +19,8 @@ SS_CREATEDLL := gcc -dynamic -fPIC -o
 
 ifeq ("$(OS)","darwin")
   SS_MAC := 1
-  SS_CONGIG := mac
+  export SS_MAC
+  SS_CONFIG := mac
   LIB_DIR := ../lib/mac
   JCONFIG := jconfig.mac
   SS_DLLEXT := .dylib
@@ -27,6 +28,7 @@ endif
 
 ifeq ("$(OS)","iphone")
   SS_IPHONE := 1
+  export SS_IPHONE
   JCONFIG := jconfig.mac
   SDL_INC := ../include/SDL13
   SDL := SDL-1.3.0-4563
@@ -34,9 +36,10 @@ ifeq ("$(OS)","iphone")
 endif
 
 ifeq ("$(OS)","linux")
-  SS_CONGIG := linux
-  LIB_DIR := ../lib/linux32
+  SS_CONFIG := linux
   SS_LINUX := 1
+  export SS_LINUX
+  LIB_DIR := ../lib/linux32
   JCONFIG := jconfig.linux
   SS_DLLEXT := .dso
 endif
@@ -44,11 +47,12 @@ endif
 
 ifeq ("$(OS)","windows")
   SS_WINDOWS := 1
-  SS_CONGIG := windows
+  export SS_WINDOWS
+  SS_CONFIG := windows
   LIB_DIR := ../lib/win32
   SS_LIBEXT := .lib
   JCONFIG := jconfig.vc
-  SS_CC := cl.exe -nologo -MT -Zi -O2
+  SS_CC := cl.exe -nologo -MT -Zi -Od
   SS_OBJEXT := .obj
   SS_OBJOUT := -Fo
   SS_CREATELIB := lib -out:

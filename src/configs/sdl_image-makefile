@@ -20,7 +20,7 @@ CONFIG := \
    -DLOAD_XV
 
 %$(SS_OBJEXT):%.c
-	$(SS_CC) -O2 $(CONFIG) -I../../include -I../$(SDL_INC) $< -c
+	$(SS_CC) $(CONFIG) -I../../include -I../$(SDL_INC) $< -c
 
 clean:
 	rm -f $(OBJS)
