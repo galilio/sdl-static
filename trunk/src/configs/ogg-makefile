@@ -7,7 +7,7 @@ libogg$(SS_LIBEXT):$(OGG_OBJS)
 	$(SS_CREATELIB)$@  $(OGG_OBJS)
 
 src/%.o:src/%.c
-	$(SS_CC) -O2 $< -c $(SS_OBJOUT)$@ -Iinclude
+	$(SS_CC) $< -c $(SS_OBJOUT)$@ -Iinclude
 
 clean:
 	rm -f $(OGG_OBJS)

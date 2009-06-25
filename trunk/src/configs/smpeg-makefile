@@ -1,3 +1,4 @@
+
 all:libsmpeg$(SS_LIBEXT)
 
 SOURCE := \
@@ -28,11 +29,13 @@ SOURCE := \
 	video/readfile.cpp	\
 	video/util.cpp		\
 	video/video.cpp		\
-	video/vhar128.cpp	\
+	video/vhar128.cpp
+
+SOURCE_MMX := \
 	video/mmxflags_asm.S	\
 	video/mmxidct_asm.S
 
-HEADERS :\ \
+HEADERS : \
 	video/vhar128.h		\
 	video/video.h		\
 	video/util.h		\
@@ -44,13 +47,16 @@ OBJS := $(SOURCE:%.cpp=%$(SS_OBJEXT))
 OBJS := $(OBJS:%.S=%$(SS_OBJEXT))
 OBJS := $(OBJS:%.c=%$(SS_OBJEXT))
 
-DEFINES := -DNOCONTROLS
+DEFINES := -DNOCONTROLS -DTHREADED_AUDIO
+ifdef SS_WINDOWS
+DEFINES += -DWIN32 -D_CRT_SECURE_NO_DEPRECATE
+endif
 
 libsmpeg$(SS_LIBEXT): $(OBJS)
 	$(SS_CREATELIB)libsmpeg$(SS_LIBEXT) $(OBJS)
 
 %$(SS_OBJEXT):%.cpp
-	$(SS_CC) -O2 $(DEFINES) -I../../include -I. -I../$(SDL_INC) $< -c $(SS_OBJOUT)$@
+	$(SS_CC) $(DEFINES) -I../../include -I. -I../$(SDL_INC) $< -c $(SS_OBJOUT)$@
 
 %$(SS_OBJEXT):%.c
 	$(SS_CC) -O2 $(DEFINES) -I../../include -I. -I../$(SDL_INC) $< -c $(SS_OBJOUT)$@

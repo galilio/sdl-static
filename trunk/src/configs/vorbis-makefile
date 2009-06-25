@@ -14,7 +14,7 @@ libvorbis$(SS_LIBEXT):$(VORBIS_OBJS)
 	$(SS_CREATELIB)$@ $(VORBIS_OBJS)
 
 %$(SS_OBJEXT):lib/%.c
-	$(SS_CC) -O2 $< -c $(SS_OBJOUT)$@ -Iinclude -Ilib -I../../include 
+	$(SS_CC) $< -c $(SS_OBJOUT)$@ -Iinclude -Ilib -I../../include 
 
 clean:
 	rm -f $(VORBIS_OBJS)

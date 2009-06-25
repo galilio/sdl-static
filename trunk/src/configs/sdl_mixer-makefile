@@ -1,7 +1,22 @@
 all:libSDL_mixer$(SS_LIBEXT)
-
+ 
 SOURCE := \
-./effect_position.c ./effect_stereoreverse.c music_ogg.c dynamic_ogg.c load_ogg.c ./effects_internal.c ./load_aiff.c ./load_voc.c ./mixer.c ./music.c ./music_cmd.c ./wavestream.c $(wildcard mikmod/*.c) $(wildcard ./timidity/*.c) $(wildcard ./native_midi/*.c)
+   ./effect_position.c \
+   ./effect_stereoreverse.c \
+   music_ogg.c \
+   dynamic_ogg.c \
+   load_ogg.c \
+   ./effects_internal.c \
+   ./load_aiff.c \
+   ./load_voc.c \
+   ./mixer.c \
+   ./music.c \
+   ./music_cmd.c \
+   ./wavestream.c \
+   ./dynamic_mp3.c \
+   $(wildcard mikmod/*.c) \
+   $(wildcard ./timidity/*.c) \
+   $(wildcard ./native_midi/*.c)
 
 
 
@@ -20,10 +35,11 @@ CONFIG := \
 	-DUSE_NATIVE_MIDI \
 	-DMOD_MISIC \
 	-DMOD_MISIC \
-	-DMP3_MUSIC
+	-DMP3_MUSIC \
+	-D__STDC__
 
 %$(SS_OBJEXT):%.c
-	$(SS_CC) -O2 $(CONFIG) -I../../include -Inative_midi -I../$(SDL_INC) $< -c $(SS_OBJOUT)$@
+	$(SS_CC) $(CONFIG) -I../../include -Inative_midi -I../$(SDL_INC) $< -c $(SS_OBJOUT)$@
 
 
 clean:
