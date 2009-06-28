@@ -25,6 +25,10 @@ OBJS := $(SOURCE:%.c=%$(SS_OBJEXT))
 libSDL_mixer$(SS_LIBEXT): $(OBJS)
 	$(SS_CREATELIB)libSDL_mixer$(SS_LIBEXT) $(OBJS)
 
+ifndef SS_IPHONEOS
+   MP3_FILES := -DMP3_MUSIC
+endif
+
 CONFIG := \
    -Imikmod \
    -DOGG_MUSIC \
@@ -35,7 +39,7 @@ CONFIG := \
 	-DUSE_NATIVE_MIDI \
 	-DMOD_MISIC \
 	-DMOD_MISIC \
-	-DMP3_MUSIC \
+         $(MP3_FILES) \
 	-D__STDC__
 
 %$(SS_OBJEXT):%.c
