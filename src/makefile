@@ -1,4 +1,4 @@
-.PHONY: clean zlib jpeg ogg vorbis freetype sdl sdl_ttf sdl_image sdl_mixer always
+.PHONY: clean print zlib jpeg ogg vorbis freetype sdl sdl_ttf sdl_image sdl_mixer always
 
 OS := $(OSTYPE)
 OS := $(OS:darwin%=darwin)
@@ -26,13 +26,23 @@ ifeq ("$(OS)","darwin")
   SS_DLLEXT := .dylib
 endif
 
-ifeq ("$(OS)","iphone")
-  SS_IPHONE := 1
-  export SS_IPHONE
+ifeq ("$(OS)","iphoneos")
+  SS_IPHONEOS := 1
+  export SS_IPHONEOS
   JCONFIG := jconfig.mac
+  SS_CONFIG := iphoneos
+  LIB_DIR := ../lib/iphoneos
   SDL_INC := ../include/SDL13
   SDL := SDL-1.3.0-4563
-  SS_DLLEXT := .dylib
+  IPHONE_VER := 2.2.1
+  SS_CC := /Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/gcc-4.0  \
+      -DIPHONE=1 -D__IPHONEOS__=1 -O2 \
+      -I../../include/SDL13 -DSDL13 \
+      -arch armv6 -fmessage-length=0 -pipe -Wno-trigraphs -fpascal-strings \
+      -fasm-blocks -Wreturn-type -Wunused-variable -mthumb \
+       -I/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneOS$(IPHONE_VER).sdk/usr/include/ \
+      -isysroot /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS$(IPHONE_VER).sdk \
+
 endif
 
 ifeq ("$(OS)","linux")
@@ -52,7 +62,7 @@ ifeq ("$(OS)","windows")
   LIB_DIR := ../lib/win32
   SS_LIBEXT := .lib
   JCONFIG := jconfig.vc
-  SS_CC := cl.exe -nologo -MT -Zi -Od
+  SS_CC := cl.exe -nologo -MT -Zi -O2
   SS_OBJEXT := .obj
   SS_OBJOUT := -Fo
   SS_CREATELIB := lib -out:
@@ -70,7 +80,23 @@ export SS_DLLEXT
 export SS_CREATEDLL
 export SDL_INC
 
-all: zlib png jpeg ogg vorbis freetype smpeg sdl sdl_ttf sdl_image sdl_mixer
+all: print 
+all: zlib 
+all: png 
+all: jpeg 
+all: ogg 
+all: vorbis 
+all: freetype 
+ifndef SS_IPHONEOS
+all: smpeg 
+endif
+all: sdl 
+all: sdl_ttf 
+all: sdl_image 
+all: sdl_mixer
+
+print:
+	@echo "OS: " $(OSTYPE)
 
 # --- ZLIB ------------------------
 ZLIB := zlib-1.2.3
@@ -84,6 +110,7 @@ ifdef SS_WINDOWS
 	cd $(ZLIB); unset MAKEFLAGS; nmake -f win32/Makefile.msc
 	cp $(ZLIB)/zlib$(SS_LIBEXT) $(LIB_DIR)
 else
+	cp configs/zlib-makefile $(ZLIB)/Makefile
 	cd $(ZLIB); make
 	cp $(ZLIB)/libz$(SS_LIBEXT) $(LIB_DIR)
 endif
@@ -121,14 +148,15 @@ jpeg:$(JPEG)
 
 $(JPEG):
 	tar xvzf tars/$(JPEG).tgz
-	cp $(JPEG)/$(JCONFIG) $(JPEG)/jconfig.h
+	cp configs/jconfig.h configs/jconfig.mac configs/jconfig.iphoneos  $(JPEG)
 ifdef SS_WINDOWS
 	cd $(JPEG); unset MAKEFLAGS; nmake -f makefile.vc nodebug=1
 else
-	cd $(JPEG); ./configure
-	cd $(JPEG); make -f makefile.unix nodebug=1
+	cp configs/jpeg-makefile $(JPEG)/Makefile
+	cd $(JPEG); make -f Makefile nodebug=1
 endif
-	cp $(JPEG)/jpeglib.h $(JPEG)/jconfig.h $(JPEG)/jmorecfg.h ../include
+	cp configs/jconfig.h configs/jconfig.mac configs/jconfig.iphoneos  ../include
+	cp $(JPEG)/jpeglib.h  $(JPEG)/jmorecfg.h ../include
 	cp $(JPEG)/libjpeg$(SS_LIBEXT) $(LIB_DIR)
 
 clean::
@@ -184,6 +212,7 @@ freetype:$(FREETYPE)
 $(FREETYPE):
 	tar xvzf tars/$(FREETYPE).tgz
 	cp configs/freetype-makefile $(FREETYPE)/Makefile
+	cp patches/freetype/ftconfig.h $(FREETYPE)/include/freetype/config
 	cd $(FREETYPE); make
 	cp $(FREETYPE)/libfreetype$(SS_LIBEXT) $(LIB_DIR)
 	cp $(FREETYPE)/include/ft2build.h ../include
@@ -213,7 +242,7 @@ clean::
 
 # --- SDL ------------------------
 
-ifdef SS_WINDOWS
+ifndef SS_IPHONEOS
 SDL := SDL-1.2.13
 	#cp patches/SDL/SDL_win32window.c $(SDL)/src/video/win32
 	#cp patches/SDL/SDL_sysvideo.h $(SDL)/src/video
@@ -235,10 +264,10 @@ ifdef SS_WINDOWS
 	cp $(SDL)/libSDL$(SS_LIBEXT) $(LIB_DIR)
 	cp $(SDL)/libSDLmain$(SS_LIBEXT) $(LIB_DIR)
 else
-	cd $(SDL); ./configure --enable-shared=no
+	cp configs/sdl-makefile $(SDL)/Makefile
+	#cd $(SDL); ./configure --enable-shared=no
 	cd $(SDL); make
-	cp $(SDL)/build/.libs/libSDL.a $(LIB_DIR)
-	cp $(SDL)/build/libSDLmain.a $(LIB_DIR)
+	cp $(SDL)/libSDL.a $(LIB_DIR)
 endif
 	cp $(SDL)/include/*.h $(SDL_INC)
 

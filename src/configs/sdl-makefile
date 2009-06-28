@@ -1,8 +1,8 @@
 LIBNAME:= libSDL
 
-all : $(LIBNAME)$(SS_LIBEXT) libSDLMain$(SS_LIBEXT)
+all : $(LIBNAME)$(SS_LIBEXT)
 
-SOURCES := \
+SOURCES_12 := \
    src/SDL.c \
    src/events/SDL_active.c \
    src/audio/SDL_audio.c \
@@ -69,9 +69,8 @@ SOURCES := \
    src/video/wincommon/SDL_wingl.c \
    src/video/SDL_yuv.c \
    src/video/SDL_yuv_sw.c
-   
 
-SOURCES_13 := \
+SOURCES_LIBM := \
    src/libm/e_log.c \
    src/libm/e_pow.c \
    src/libm/e_rem_pio2.c \
@@ -84,7 +83,32 @@ SOURCES_13 := \
    src/libm/s_fabs.c \
    src/libm/s_floor.c \
    src/libm/s_scalbn.c \
-   src/libm/s_sin.c \
+   src/libm/s_sin.c
+
+SOURCE_WIN_13 = \
+   src/video/win32/SDL_d3drender.c \
+   src/audio/windib/SDL_dibaudio.c \
+   src/audio/windx5/SDL_dx5audio.c \
+   src/joystick/win32/SDL_dxjoystick.c \
+   src/video/win32/SDL_gdirender.c \
+   src/joystick/win32/SDL_mmjoystick.c \
+   src/cdrom/win32/SDL_syscdrom.c \
+   src/haptic/win32/SDL_syshaptic.c \
+   src/loadso/win32/SDL_sysloadso.c \
+   src/thread/win32/SDL_sysmutex.c \
+   src/thread/win32/SDL_syssem.c \
+   src/thread/win32/SDL_systhread.c \
+   src/timer/win32/SDL_systimer.c \
+   src/video/win32/SDL_win32events.c \
+   src/video/win32/SDL_win32gamma.c \
+   src/video/win32/SDL_win32keyboard.c \
+   src/video/win32/SDL_win32modes.c \
+   src/video/win32/SDL_win32mouse.c \
+   src/video/win32/SDL_win32opengl.c \
+   src/video/win32/SDL_win32video.c \
+   src/video/win32/SDL_win32window.c
+
+SOURCES_13 := \
    src/SDL.c \
    src/video/SDL_alphamult.c \
    src/audio/SDL_audio.c \
@@ -106,20 +130,15 @@ SOURCES_13 := \
    src/cdrom/SDL_cdrom.c \
    src/SDL_compat.c \
    src/cpuinfo/SDL_cpuinfo.c \
-   src/video/win32/SDL_d3drender.c \
-   src/audio/windib/SDL_dibaudio.c \
    src/audio/disk/SDL_diskaudio.c \
    src/video/SDL_drawline.c \
    src/video/SDL_drawpoint.c \
    src/audio/dummy/SDL_dummyaudio.c \
-   src/audio/windx5/SDL_dx5audio.c \
-   src/joystick/win32/SDL_dxjoystick.c \
    src/SDL_error.c \
    src/events/SDL_events.c \
    src/SDL_fatal.c \
    src/video/SDL_fillrect.c \
    src/video/SDL_gamma.c \
-   src/video/win32/SDL_gdirender.c \
    src/stdlib/SDL_getenv.c \
    src/haptic/SDL_haptic.c \
    src/stdlib/SDL_iconv.c \
@@ -130,7 +149,6 @@ SOURCES_13 := \
    src/audio/SDL_mixer_m68k.c \
    src/audio/SDL_mixer_MMX.c \
    src/audio/SDL_mixer_MMX_VC.c \
-   src/joystick/win32/SDL_mmjoystick.c \
    src/events/SDL_mouse.c \
    src/video/dummy/SDL_nullevents.c \
    src/video/dummy/SDL_nullrender.c \
@@ -147,25 +165,10 @@ SOURCES_13 := \
    src/video/SDL_stretch.c \
    src/stdlib/SDL_string.c \
    src/video/SDL_surface.c \
-   src/cdrom/win32/SDL_syscdrom.c \
-   src/haptic/win32/SDL_syshaptic.c \
-   src/loadso/win32/SDL_sysloadso.c \
-   src/thread/win32/SDL_sysmutex.c \
-   src/thread/win32/SDL_syssem.c \
-   src/thread/win32/SDL_systhread.c \
-   src/timer/win32/SDL_systimer.c \
    src/thread/SDL_thread.c \
    src/timer/SDL_timer.c \
    src/video/SDL_video.c \
    src/audio/SDL_wave.c \
-   src/video/win32/SDL_win32events.c \
-   src/video/win32/SDL_win32gamma.c \
-   src/video/win32/SDL_win32keyboard.c \
-   src/video/win32/SDL_win32modes.c \
-   src/video/win32/SDL_win32mouse.c \
-   src/video/win32/SDL_win32opengl.c \
-   src/video/win32/SDL_win32video.c \
-   src/video/win32/SDL_win32window.c \
    src/events/SDL_windowevents.c \
    src/video/SDL_yuv_mmx.c \
    src/video/SDL_yuv_sw.c
@@ -194,7 +197,26 @@ SOURCES_UNIX = \
 	$(wildcard src/timer/dummy/*.c) \
 	$(wildcard src/loadso/dummy/*.c)
 
+ifdef SS_WINDOWS
+SOURCES := $(SOURCES_12)
 MAIN_SOURCES := src/Main/Win32/SDL_win32_main.c
+all:libSDLMain$(SS_LIBEXT)
+DEFINES := -D_WINDOWS -D_WIN32_WINNT=0x0400 -D__MMX__ -D__3dNOW__ -D__SSE__ -D__SSE2__  -DHAVE_LIBC
+endif
+ifdef SS_MAC
+SOURCES := $(SOURCES_12)
+DEFINES := -DHAVE_LIBC
+endif
+ifdef SS_IPHONEOS
+SOURCES := $(SOURCES_13)
+DEFINES := -DHAVE_LIBC
+endif
+ifdef SS_LINUX
+SOURCES := $(SOURCES_UNIX)
+DEFINES := -DHAVE_LIBC
+endif
+
+
 MAIN_OBJS := $(notdir $(MAIN_SOURCES:%.c=%$(SS_OBJEXT)))
 MAIN_OBJS := $(MAIN_OBJS:%=obj/%)
 
@@ -210,7 +232,7 @@ $(LIBNAME)$(SS_LIBEXT):$(OBJS)
 libSDLMain$(SS_LIBEXT):$(MAIN_OBJS)
 	$(SS_CREATELIB)$@ $(MAIN_OBJS)
 
-DEFINES := -D_WINDOWS -D_WIN32_WINNT=0x0400 -D__MMX__ -D__3dNOW__ -D__SSE__ -D__SSE2__  -DHAVE_LIBC
+
 
 obj/%$(SS_OBJEXT):%.c
 	-mkdir -p obj

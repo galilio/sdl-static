@@ -48,7 +48,7 @@ libfreetype$(SS_LIBEXT):$(FREETYPE_OBJS)
 
 obj/%$(SS_OBJEXT):%.c
 	-mkdir -p obj
-	$(SS_CC) $< -c $(SS_OBJOUT)$@ -DFT2_BUILD_LIBRARY -Iinclude
+	$(SS_CC) $< -c $(SS_OBJOUT)$@ -DFT2_BUILD_LIBRARY -DDARWIN_NO_CARBON -Iinclude
 
 clean:
 	rm -f $(FREETYPE_OBJS)

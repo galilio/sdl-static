@@ -38,9 +38,9 @@ OBJS = png$(O) pngerror$(O) pngget$(O) pngmem$(O) pngpread$(O) \
 all: static
 
 .c$(O):
-	$(CC) -c $(CFLAGS) -I$(ZLIBINC) $<
+	$(SS_CC) -c $(CFLAGS) -I$(ZLIBINC) $<
 
-static: libpng$(A) pngtest$(EXE)
+static: libpng$(A)
 
 shared:
 	@echo This is a generic makefile that cannot create shared libraries.
