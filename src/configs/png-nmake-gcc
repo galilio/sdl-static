@@ -22,11 +22,10 @@ LDRELEASE = -s
 CFLAGS = -Wall $(CRELEASE)
 #LDFLAGS = $(LDDEBUG)
 LDFLAGS = $(LDRELEASE)
-LIBS = -lz -lm
 
 # File extensions
 O=.o
-A=.a
+A=$(SS_LIBEXT)
 EXE=
 
 # Variables

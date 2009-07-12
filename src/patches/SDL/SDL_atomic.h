@@ -600,7 +600,7 @@ SDL_atomic_ptr_cmp_xchg(volatile void** atomic, void* oldvalue, void* newvalue)
 # endif
 #else /* when all else fails */
 # define SDL_ATOMIC_OPS_NOT_SUPPORTED
-# warning "Atomic Ops for this platform not supported!"
+//# warning "Atomic Ops for this platform not supported!"
 static __inline__ int
 SDL_atomic_int_xchg_add(volatile int* atomic, int value)
 {                                           
