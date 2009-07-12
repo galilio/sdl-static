@@ -28,10 +28,13 @@ endif
 
 ifeq ("$(OS)","iphoneos")
   SS_IPHONEOS := 1
+  SS_LIBEXT := .iphoneos.a
   export SS_IPHONEOS
+  export SS_IPHONE
   JCONFIG := jconfig.mac
   SS_CONFIG := iphoneos
-  LIB_DIR := ../lib/iphoneos
+  SS_IPHONE := 1
+  LIB_DIR := ../lib/iPhone
   SDL_INC := ../include/SDL13
   SDL := SDL-1.3.0-4563
   IPHONE_VER := 2.2.1
@@ -39,17 +42,44 @@ ifeq ("$(OS)","iphoneos")
       -DIPHONE=1 -D__IPHONEOS__=1 -O2 \
       -I../../include/SDL13 -DSDL13 \
       -arch armv6 -fmessage-length=0 -pipe -Wno-trigraphs -fpascal-strings \
-      -fasm-blocks -Wreturn-type -Wunused-variable -mthumb \
-       -I/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneOS$(IPHONE_VER).sdk/usr/include/ \
+      -fasm-blocks -Wreturn-type -Wunused-variable  \
+       -I/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS$(IPHONE_VER).sdk/usr/include/ \
       -isysroot /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS$(IPHONE_VER).sdk \
 
 endif
+
+ifeq ("$(OS)","iphonesim")
+  SS_IPHONESIM := 1
+  SS_LIBEXT := .iphonesim.a
+  export SS_IPHONESIM
+  export SS_IPHONE
+  JCONFIG := jconfig.mac
+  SS_CONFIG := iphonesim
+  LIB_DIR := ../lib/iPhone
+  SDL_INC := ../include/SDL13
+  SDL := SDL-1.3.0-4563
+  SS_IPHONE := 1
+  IPHONE_VER := 2.2.1
+  SS_CC := /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/gcc-4.0  \
+      -DIPHONE=1 -D__IPHONESIM__=1 -O2 \
+      -I../../include/SDL13 -DSDL13 \
+      -arch i386 -fmessage-length=0 -pipe -Wno-trigraphs -fpascal-strings \
+      -fasm-blocks -Wreturn-type -Wunused-variable  \
+       -I/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneOS$(IPHONE_VER).sdk/usr/include/ \
+      -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator$(IPHONE_VER).sdk \
+
+endif
+
+
+
+
+
 
 ifeq ("$(OS)","linux")
   SS_CONFIG := linux
   SS_LINUX := 1
   export SS_LINUX
-  LIB_DIR := ../lib/linux32
+  LIB_DIR := ../lib/Linux
   JCONFIG := jconfig.linux
   SS_DLLEXT := .dso
 endif
@@ -59,7 +89,7 @@ ifeq ("$(OS)","windows")
   SS_WINDOWS := 1
   export SS_WINDOWS
   SS_CONFIG := windows
-  LIB_DIR := ../lib/win32
+  LIB_DIR := ../lib/Windows
   SS_LIBEXT := .lib
   JCONFIG := jconfig.vc
   SS_CC := cl.exe -nologo -MT -Zi -O2
@@ -87,7 +117,7 @@ all: jpeg
 all: ogg 
 all: vorbis 
 all: freetype 
-ifndef SS_IPHONEOS
+ifndef SS_IPHONE
 all: smpeg 
 endif
 all: sdl 
@@ -242,7 +272,7 @@ clean::
 
 # --- SDL ------------------------
 
-ifndef SS_IPHONEOS
+ifndef SS_IPHONE
 SDL := SDL-1.2.13
 	#cp patches/SDL/SDL_win32window.c $(SDL)/src/video/win32
 	#cp patches/SDL/SDL_sysvideo.h $(SDL)/src/video
@@ -267,7 +297,7 @@ else
 	cp configs/sdl-makefile $(SDL)/Makefile
 	#cd $(SDL); ./configure --enable-shared=no
 	cd $(SDL); make
-	cp $(SDL)/libSDL.a $(LIB_DIR)
+	cp $(SDL)/libSDL$(SS_LIBEXT) $(LIB_DIR)
 endif
 	cp $(SDL)/include/*.h $(SDL_INC)
 

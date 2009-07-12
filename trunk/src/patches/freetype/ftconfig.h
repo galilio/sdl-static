@@ -302,6 +302,12 @@ FT_BEGIN_HEADER
 #define FT_DUMMY_STMNT  FT_BEGIN_STMNT FT_END_STMNT
 
 
+// does not work on iphone...
+#if defined( __arm__ )
+#define  FT_CONFIG_OPTION_NO_ASSEMBLER
+#endif
+
+
 #ifndef  FT_CONFIG_OPTION_NO_ASSEMBLER
   /* Provide assembler fragments for performance-critical functions. */
   /* These must be defined `static __inline__' with GCC.             */

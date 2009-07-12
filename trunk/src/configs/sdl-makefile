@@ -108,6 +108,27 @@ SOURCE_WIN_13 = \
    src/video/win32/SDL_win32video.c \
    src/video/win32/SDL_win32window.c
 
+IPHONEOS_SOURCE := \
+   src/thread/pthread/SDL_syscond.c \
+   src/thread/pthread/SDL_sysmutex.c \
+   src/thread/pthread/SDL_syssem.c \
+   src/thread/pthread/SDL_systhread.c \
+   src/joystick/iphoneos/SDL_sysjoystick.m \
+   src/joystick/iphoneos/SDLUIAccelerationDelegate.m \
+   src/audio/iphoneos/SDL_coreaudio_iphone.c \
+   src/video/uikit/SDL_uikitvideo.m \
+   src/video/uikit/SDL_uikitappdelegate.m \
+   src/video/uikit/SDL_uikitevents.m \
+   src/video/uikit/SDL_uikitopengles.m \
+   src/video/uikit/SDL_uikitopenglview.m \
+   src/video/uikit/SDL_uikitvideo.m \
+   src/video/uikit/SDL_uikitview.m \
+   src/video/uikit/SDL_uikitwindow.m \
+   src/video/uikit/jumphack.c \
+   src/loadso/dummy/SDL_sysloadso.c \
+   src/video/SDL_renderer_gles.c
+
+
 SOURCES_13 := \
    src/SDL.c \
    src/video/SDL_alphamult.c \
@@ -167,12 +188,13 @@ SOURCES_13 := \
    src/video/SDL_surface.c \
    src/thread/SDL_thread.c \
    src/timer/SDL_timer.c \
+   src/timer/unix/SDL_systimer.c \
    src/video/SDL_video.c \
    src/audio/SDL_wave.c \
    src/events/SDL_windowevents.c \
    src/video/SDL_yuv_mmx.c \
    src/video/SDL_yuv_sw.c
-   
+
 
 SOURCES_UNIX = \
 	$(wildcard src/*.c) \
@@ -208,7 +230,11 @@ SOURCES := $(SOURCES_12)
 DEFINES := -DHAVE_LIBC
 endif
 ifdef SS_IPHONEOS
-SOURCES := $(SOURCES_13)
+SOURCES := $(SOURCES_13) $(IPHONEOS_SOURCE)
+DEFINES := -DHAVE_LIBC
+endif
+ifdef SS_IPHONESIM
+SOURCES := $(SOURCES_13) $(IPHONEOS_SOURCE)
 DEFINES := -DHAVE_LIBC
 endif
 ifdef SS_LINUX
@@ -218,11 +244,12 @@ endif
 
 
 MAIN_OBJS := $(notdir $(MAIN_SOURCES:%.c=%$(SS_OBJEXT)))
-MAIN_OBJS := $(MAIN_OBJS:%=obj/%)
+MAIN_OBJS := $(MAIN_OBJS:%.m=%$(SS_OBJEXT))
 
 VPATH:=$(dir $(SOURCES) $(MAIN_SOURCES) )
 
 OBJS := $(notdir $(SOURCES:%.c=%$(SS_OBJEXT)))
+OBJS := $(OBJS:%.m=%$(SS_OBJEXT))
 OBJS := $(OBJS:%=obj/%)
 
 $(LIBNAME)$(SS_LIBEXT):$(OBJS)
@@ -233,10 +260,15 @@ libSDLMain$(SS_LIBEXT):$(MAIN_OBJS)
 	$(SS_CREATELIB)$@ $(MAIN_OBJS)
 
 
+SDL_INCLUDES := -Iinclude -Isrc/events -Isrc/video
 
 obj/%$(SS_OBJEXT):%.c
 	-mkdir -p obj
-	$(SS_CC) $< -c $(SS_OBJOUT)$@ $(DEFINES) -Iinclude
+	$(SS_CC) $< -c $(SS_OBJOUT)$@ $(DEFINES) $(SDL_INCLUDES)
+
+obj/%$(SS_OBJEXT):%.m
+	-mkdir -p obj
+	$(SS_CC) $< -c $(SS_OBJOUT)$@ $(DEFINES) $(SDL_INCLUDES)
 
 clean:
 	rm -f $(OBJS)

@@ -25,8 +25,9 @@ OBJS := $(SOURCE:%.c=%$(SS_OBJEXT))
 libSDL_mixer$(SS_LIBEXT): $(OBJS)
 	$(SS_CREATELIB)libSDL_mixer$(SS_LIBEXT) $(OBJS)
 
-ifndef SS_IPHONEOS
+ifndef SS_IPHONE
    MP3_FILES := -DMP3_MUSIC
+   MIDI_FILES := -DUSE_NATIVE_MIDI
 endif
 
 CONFIG := \
@@ -36,9 +37,8 @@ CONFIG := \
 	-DMID_MUSIC \
 	-DCMD_MUSIC \
 	-DWAV_MUSIC \
-	-DUSE_NATIVE_MIDI \
-	-DMOD_MISIC \
-	-DMOD_MISIC \
+	 $(MIDI_FILES) \
+	-DMOD_MUSIC \
          $(MP3_FILES) \
 	-D__STDC__
 

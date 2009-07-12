@@ -302,6 +302,12 @@ FT_BEGIN_HEADER
 #define FT_DUMMY_STMNT  FT_BEGIN_STMNT FT_END_STMNT
 
 
+// does not work on iphone...
+#if defined( __arm__ )
+#define  FT_CONFIG_OPTION_NO_ASSEMBLER
+#endif
+
+
 #ifndef  FT_CONFIG_OPTION_NO_ASSEMBLER
   /* Provide assembler fragments for performance-critical functions. */
   /* These must be defined `static __inline__' with GCC.             */
@@ -320,7 +326,7 @@ FT_BEGIN_HEADER
     register FT_Int32  t, t2;
 
 
-    asm __volatile__ (
+    __asm__ __volatile__ (
       "smull  %1, %2, %4, %3\n\t"   /* (lo=%1,hi=%2) = a*b */
       "mov    %0, %2, asr #31\n\t"  /* %0  = (hi >> 31) */
       "add    %0, %0, #0x8000\n\t"  /* %0 += 0x8000 */
