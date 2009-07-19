@@ -195,6 +195,13 @@ SOURCES_13 := \
    src/video/SDL_yuv_mmx.c \
    src/video/SDL_yuv_sw.c
 
+ifdef SS_LINUX
+SYS := linux
+else
+SYS := dummy
+endif
+
+
 
 SOURCES_UNIX = \
 	$(wildcard src/*.c) \
@@ -210,14 +217,29 @@ SOURCES_UNIX = \
 	$(wildcard src/timer/*.c) \
 	$(wildcard src/video/*.c) \
 	$(wildcard src/power/*.c) \
+	$(wildcard src/timer/unix/*.c) \
+	$(wildcard src/thread/pthread/*.c) \
+	$(wildcard src/audio/$(SYS)/*.c) \
+	$(wildcard src/video/$(SYS)/*.c) \
+	$(wildcard src/joystick/$(SYS)/*.c) \
+	$(wildcard src/haptic/$(SYS)/*.c) \
+	$(wildcard src/cdrom/$(SYS)/*.c) \
+	$(wildcard src/timer/$(SYS)/*.c) \
+	$(wildcard src/loadso/$(SYS)/*.c) \
 	$(wildcard src/audio/dummy/*.c) \
 	$(wildcard src/video/dummy/*.c) \
-	$(wildcard src/joystick/dummy/*.c) \
-	$(wildcard src/haptic/dummy/*.c) \
-	$(wildcard src/cdrom/dummy/*.c) \
-	$(wildcard src/thread/generic/*.c) \
-	$(wildcard src/timer/dummy/*.c) \
-	$(wildcard src/loadso/dummy/*.c)
+
+ifdef SS_LINUX
+SOURCES_UNIX += $(wildcard src/video/x11/*.c) \
+                $(wildcard src/video/Xext/*.c) \
+                $(wildcard src/video/Xext/*/*.c) \
+                $(wildcard src/video/dga/*.c) \
+                $(wildcard src/video/fbcon/*.c) \
+	        $(wildcard src/audio/dma/*.c) \
+	        $(wildcard src/audio/dsp/*.c) \
+	        $(wildcard src/audio/disk/*.c) \
+	        $(wildcard src/loadso/dlopen/*.c)
+endif
 
 ifdef SS_WINDOWS
 SOURCES := $(SOURCES_12)
@@ -239,7 +261,7 @@ DEFINES := -DHAVE_LIBC
 endif
 ifdef SS_LINUX
 SOURCES := $(SOURCES_UNIX)
-DEFINES := -DHAVE_LIBC
+DEFINES := -DHAVE_LIBC -D_GNU_SOURCE -D_XOPEN_SOURCE=600
 endif
 
 
