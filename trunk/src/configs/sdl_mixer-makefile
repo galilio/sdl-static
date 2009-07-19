@@ -27,7 +27,9 @@ libSDL_mixer$(SS_LIBEXT): $(OBJS)
 
 ifndef SS_IPHONE
    MP3_FILES := -DMP3_MUSIC
+ifndef SS_LINUX
    MIDI_FILES := -DUSE_NATIVE_MIDI
+endif
 endif
 
 CONFIG := \
