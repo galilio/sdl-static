@@ -16,15 +16,7 @@ SOURCES_12 := \
    src/cdrom/SDL_cdrom.c \
    src/cpuinfo/SDL_cpuinfo.c \
    src/video/SDL_cursor.c \
-   src/audio/windib/SDL_dibaudio.c \
-   src/video/windib/SDL_dibevents.c \
-   src/video/windib/SDL_dibvideo.c \
-   src/audio/disk/SDL_diskaudio.c \
    src/audio/dummy/SDL_dummyaudio.c \
-   src/audio/windx5/SDL_dx5audio.c \
-   src/video/Windx5/SDL_dx5events.c \
-   src/video/Windx5/SDL_dx5video.c \
-   src/video/windx5/SDL_dx5yuv.c \
    src/SDL_error.c \
    src/events/SDL_events.c \
    src/events/SDL_expose.c \
@@ -52,23 +44,36 @@ SOURCES_12 := \
    src/video/SDL_stretch.c \
    src/stdlib/SDL_string.c \
    src/video/SDL_surface.c \
-   src/cdrom/win32/SDL_syscdrom.c \
+   src/thread/generic/SDL_syscond.c \
+   src/thread/SDL_thread.c \
+   src/timer/SDL_timer.c \
+   src/video/SDL_video.c \
+   src/audio/SDL_wave.c \
+   src/video/SDL_yuv.c \
+   src/video/SDL_yuv_sw.c
+
+
+
+ifdef SS_WINDOWS
+SOURCES_12 += src/audio/windib/SDL_dibaudio.c \
+   src/video/wincommon/SDL_wingl.c \
    src/video/wincommon/SDL_sysevents.c \
+   src/video/windib/SDL_dibevents.c \
+   src/video/windib/SDL_dibvideo.c \
+   src/audio/disk/SDL_diskaudio.c \
+   src/audio/windx5/SDL_dx5audio.c \
+   src/video/Windx5/SDL_dx5events.c \
+   src/video/Windx5/SDL_dx5video.c \
+   src/video/windx5/SDL_dx5yuv.c \
+   src/cdrom/win32/SDL_syscdrom.c \
    src/loadso/win32/SDL_sysloadso.c \
    src/video/wincommon/SDL_sysmouse.c \
    src/thread/win32/SDL_sysmutex.c \
    src/thread/win32/SDL_syssem.c \
    src/thread/win32/SDL_systhread.c \
    src/timer/win32/SDL_systimer.c \
-   src/video/wincommon/SDL_syswm.c \
-   src/thread/generic/SDL_syscond.c \
-   src/thread/SDL_thread.c \
-   src/timer/SDL_timer.c \
-   src/video/SDL_video.c \
-   src/audio/SDL_wave.c \
-   src/video/wincommon/SDL_wingl.c \
-   src/video/SDL_yuv.c \
-   src/video/SDL_yuv_sw.c
+   src/video/wincommon/SDL_syswm.c
+endif
 
 SOURCES_LIBM := \
    src/libm/e_log.c \
@@ -195,10 +200,14 @@ SOURCES_13 := \
    src/video/SDL_yuv_mmx.c \
    src/video/SDL_yuv_sw.c
 
+SYS := dummy
+
 ifdef SS_LINUX
 SYS := linux
-else
-SYS := dummy
+endif
+
+ifdef SS_MAC
+SYS := darwin
 endif
 
 
@@ -241,6 +250,27 @@ SOURCES_UNIX += $(wildcard src/video/x11/*.c) \
 	        $(wildcard src/loadso/dlopen/*.c)
 endif
 
+ifdef SS_MAC
+SOURCES_UNIX += \
+                $(wildcard src/video/quartz/*.m) \
+                $(wildcard src/video/maccommon/*.c) \
+                $(wildcard src/video/macdsp/*.c) \
+                $(wildcard src/video/macrom/*/*.c) \
+	        $(wildcard src/audio/macosx/*.c) \
+	        $(wildcard src/audio/macrom/*.c) \
+	        $(wildcard src/audio/disk/*.c) \
+	        $(wildcard src/cdrom/macosx/*.c) \
+	        $(wildcard src/joystick/darwin/*.c) \
+	        $(wildcard src/loadso/dlopen/*.c)
+
+endif
+
+print:
+	echo $(SOURCES_UNIX)
+
+all: print
+
+
 ifdef SS_WINDOWS
 SOURCES := $(SOURCES_12)
 MAIN_SOURCES := src/Main/Win32/SDL_win32_main.c
@@ -248,7 +278,7 @@ all:libSDLMain$(SS_LIBEXT)
 DEFINES := -D_WINDOWS -D_WIN32_WINNT=0x0400 -D__MMX__ -D__3dNOW__ -D__SSE__ -D__SSE2__  -DHAVE_LIBC
 endif
 ifdef SS_MAC
-SOURCES := $(SOURCES_12)
+SOURCES := $(SOURCES_UNIX)
 DEFINES := -DHAVE_LIBC
 endif
 ifdef SS_IPHONEOS

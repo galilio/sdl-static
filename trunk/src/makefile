@@ -21,7 +21,7 @@ ifeq ("$(OS)","darwin")
   SS_MAC := 1
   export SS_MAC
   SS_CONFIG := mac
-  LIB_DIR := ../lib/mac
+  LIB_DIR := ../lib/Mac
   JCONFIG := jconfig.mac
   SS_DLLEXT := .dylib
 endif
