@@ -295,7 +295,9 @@ ifdef SS_WINDOWS
 	cp $(SDL)/libSDLmain$(SS_LIBEXT) $(LIB_DIR)
 else
 	cp configs/sdl-makefile $(SDL)/Makefile
+ifndef SS_IPHONE
 	cp patches/SDL/SDL_config* $(SDL)/include
+endif
 	#cd $(SDL); ./configure --enable-shared=no
 	cd $(SDL); make
 	cp $(SDL)/libSDL$(SS_LIBEXT) $(LIB_DIR)
