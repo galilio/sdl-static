@@ -92,7 +92,7 @@ ifeq ("$(OS)","windows")
   LIB_DIR := ../lib/Windows
   SS_LIBEXT := .lib
   JCONFIG := jconfig.vc
-  SS_CC := cl.exe -nologo -MT -Zi -O2
+  SS_CC := cl.exe -nologo -MT -Zi -O2 -DWIN32
   SS_OBJEXT := .obj
   SS_OBJOUT := -Fo
   SS_CREATELIB := lib -out:
@@ -138,7 +138,7 @@ $(ZLIB):
 ifdef SS_WINDOWS
 	cp patches/zlib/Makefile.msc $(ZLIB)/win32
 	cd $(ZLIB); unset MAKEFLAGS; nmake -f win32/Makefile.msc
-	cp $(ZLIB)/zlib$(SS_LIBEXT) $(LIB_DIR)
+	cp $(ZLIB)/zlib$(SS_LIBEXT) $(LIB_DIR)/libz$(SS_LIBEXT)
 else
 	cp configs/zlib-makefile $(ZLIB)/Makefile
 	cd $(ZLIB); make
@@ -178,14 +178,14 @@ jpeg:$(JPEG)
 
 $(JPEG):
 	tar xvzf tars/$(JPEG).tgz
-	cp configs/jconfig.h configs/jconfig.mac configs/jconfig.iphoneos  $(JPEG)
+	cp configs/jconfig.h configs/jconfig.mac configs/jconfig.iphoneos  configs/jconfig.vc $(JPEG)
 ifdef SS_WINDOWS
 	cd $(JPEG); unset MAKEFLAGS; nmake -f makefile.vc nodebug=1
 else
 	cp configs/jpeg-makefile $(JPEG)/Makefile
 	cd $(JPEG); make -f Makefile nodebug=1
 endif
-	cp configs/jconfig.h configs/jconfig.mac configs/jconfig.iphoneos  ../include
+	cp configs/jconfig.h configs/jconfig.mac configs/jconfig.iphoneos  configs/jconfig.vc ../include
 	cp $(JPEG)/jpeglib.h  $(JPEG)/jmorecfg.h ../include
 	cp $(JPEG)/libjpeg$(SS_LIBEXT) $(LIB_DIR)
 
@@ -288,19 +288,14 @@ sdl:$(SDL)
 $(SDL):
 	tar xzf tars/$(SDL).tgz
 	mkdir -p $(SDL_INC)
-ifdef SS_WINDOWS
-	cp configs/sdl-makefile $(SDL)/Makefile
-	cd $(SDL); make
-	cp $(SDL)/libSDL$(SS_LIBEXT) $(LIB_DIR)
-	cp $(SDL)/libSDLmain$(SS_LIBEXT) $(LIB_DIR)
-else
 	cp configs/sdl-makefile $(SDL)/Makefile
 ifndef SS_IPHONE
 	cp patches/SDL/SDL_config* $(SDL)/include
 endif
-	#cd $(SDL); ./configure --enable-shared=no
 	cd $(SDL); make
 	cp $(SDL)/libSDL$(SS_LIBEXT) $(LIB_DIR)
+ifdef SS_WINDOWS
+	cp $(SDL)/libSDLmain$(SS_LIBEXT) $(LIB_DIR)
 endif
 	cp $(SDL)/include/*.h $(SDL_INC)
 
