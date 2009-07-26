@@ -55,7 +55,7 @@ SOURCES_12 := \
 
 
 ifdef SS_WINDOWS
-SOURCES_12 += src/audio/windib/SDL_dibaudio.c \
+SOURCES_12 := src/audio/windib/SDL_dibaudio.c \
    src/video/wincommon/SDL_wingl.c \
    src/video/wincommon/SDL_sysevents.c \
    src/video/windib/SDL_dibevents.c \
@@ -72,7 +72,9 @@ SOURCES_12 += src/audio/windib/SDL_dibaudio.c \
    src/thread/win32/SDL_syssem.c \
    src/thread/win32/SDL_systhread.c \
    src/timer/win32/SDL_systimer.c \
-   src/video/wincommon/SDL_syswm.c
+   src/video/wincommon/SDL_syswm.c \
+	$(SOURCES_12)
+
 endif
 
 SOURCES_LIBM := \
@@ -265,15 +267,10 @@ SOURCES_UNIX += \
 
 endif
 
-print:
-	echo $(SOURCES_UNIX)
-
-all: print
-
 
 ifdef SS_WINDOWS
 SOURCES := $(SOURCES_12)
-MAIN_SOURCES := src/Main/Win32/SDL_win32_main.c
+MAIN_SOURCES := src/main/win32/SDL_win32_main.c
 all:libSDLMain$(SS_LIBEXT)
 DEFINES := -D_WINDOWS -D_WIN32_WINNT=0x0400 -D__MMX__ -D__3dNOW__ -D__SSE__ -D__SSE2__  -DHAVE_LIBC
 endif
@@ -313,6 +310,10 @@ libSDLMain$(SS_LIBEXT):$(MAIN_OBJS)
 
 
 SDL_INCLUDES := -Iinclude -Isrc/events -Isrc/video
+
+%$(SS_OBJEXT):%.c
+	-mkdir -p obj
+	$(SS_CC) $< -c $(SS_OBJOUT)$@ $(DEFINES) $(SDL_INCLUDES)
 
 obj/%$(SS_OBJEXT):%.c
 	-mkdir -p obj
