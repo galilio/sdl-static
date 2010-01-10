@@ -155,12 +155,13 @@ SOURCES_13 := \
    src/video/SDL_blit_N.c \
    src/video/SDL_blit_slow.c \
    src/video/SDL_bmp.c \
-   src/cdrom/SDL_cdrom.c \
    src/SDL_compat.c \
    src/cpuinfo/SDL_cpuinfo.c \
    src/audio/disk/SDL_diskaudio.c \
    src/video/SDL_drawline.c \
    src/video/SDL_drawpoint.c \
+   src/video/SDL_drawrect.c \
+   src/video/SDL_blendfillrect.c \
    src/audio/dummy/SDL_dummyaudio.c \
    src/SDL_error.c \
    src/events/SDL_events.c \
