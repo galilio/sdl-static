@@ -20,13 +20,26 @@
     slouken@libsdl.org
 */
 
-/* This file contains functions for backwards compatibility with SDL 1.2 */
+ /**
+ *  \defgroup Compatibility SDL 1.2 Compatibility API
+ */
+/*@{*/
 
-/* 
-   #define SDL_NO_COMPAT to prevent SDL_compat.h from being included.
-   SDL_NO_COMPAT is intended to make it easier to covert SDL 1.2 code to
-   SDL 1.3/2.0
-*/
+/**
+ *  \file SDL_compat.h
+ *
+ *  This file contains functions for backwards compatibility with SDL 1.2.
+ */
+
+/**
+ *  \def SDL_NO_COMPAT
+ *
+ *  #define SDL_NO_COMPAT to prevent SDL_compat.h from being included.
+ *  SDL_NO_COMPAT is intended to make it easier to covert SDL 1.2 code to
+ *  SDL 1.3/2.0.
+ */
+
+ /*@}*/
 
 #ifdef SDL_NO_COMPAT
 #define _SDL_compat_h
@@ -46,7 +59,16 @@ extern "C" {
 /* *INDENT-ON* */
 #endif
 
-#define SDL_SWSURFACE       0x00000000  /* Not used */
+/**
+ *  \addtogroup Compatibility
+ */
+/*@{*/
+
+/**
+ *  \name Surface flags
+ */
+/*@{*/
+#define SDL_SWSURFACE       0x00000000  /**< \note Not used */
 #define SDL_SRCALPHA        0x00010000
 #define SDL_SRCCOLORKEY     0x00020000
 #define SDL_ANYFORMAT       0x00100000
@@ -56,10 +78,11 @@ extern "C" {
 #define SDL_RESIZABLE       0x01000000
 #define SDL_NOFRAME         0x02000000
 #define SDL_OPENGL          0x04000000
-#define SDL_HWSURFACE       0x08000001  /* Not used */
-#define SDL_ASYNCBLIT       0x08000000  /* Not used */
-#define SDL_RLEACCELOK      0x08000000  /* Not used */
-#define SDL_HWACCEL         0x08000000  /* Not used */
+#define SDL_HWSURFACE       0x08000001  /**< \note Not used */
+#define SDL_ASYNCBLIT       0x08000000  /**< \note Not used */
+#define SDL_RLEACCELOK      0x08000000  /**< \note Not used */
+#define SDL_HWACCEL         0x08000000  /**< \note Not used */
+/*@}*//*Surface flags*/
 
 #define SDL_APPMOUSEFOCUS	0x01
 #define SDL_APPINPUTFOCUS	0x02
@@ -103,35 +126,51 @@ typedef struct SDL_VideoInfo
     int current_h;
 } SDL_VideoInfo;
 
-/* The most common video overlay formats.
-   For an explanation of these pixel formats, see:
-   http://www.webartz.com/fourcc/indexyuv.htm
-
-   For information on the relationship between color spaces, see:
-   http://www.neuro.sfc.keio.ac.jp/~aly/polygon/info/color-space-faq.html
+/**
+ *  \name Overlay formats
+ *
+ *  The most common video overlay formats.
+ *  
+ *  For an explanation of these pixel formats, see:
+ *  http://www.webartz.com/fourcc/indexyuv.htm
+ *  
+ *  For information on the relationship between color spaces, see:
+ *  http://www.neuro.sfc.keio.ac.jp/~aly/polygon/info/color-space-faq.html
  */
-#define SDL_YV12_OVERLAY  0x32315659    /* Planar mode: Y + V + U  (3 planes) */
-#define SDL_IYUV_OVERLAY  0x56555949    /* Planar mode: Y + U + V  (3 planes) */
-#define SDL_YUY2_OVERLAY  0x32595559    /* Packed mode: Y0+U0+Y1+V0 (1 plane) */
-#define SDL_UYVY_OVERLAY  0x59565955    /* Packed mode: U0+Y0+V0+Y1 (1 plane) */
-#define SDL_YVYU_OVERLAY  0x55595659    /* Packed mode: Y0+V0+Y1+U0 (1 plane) */
+/*@{*/
+#define SDL_YV12_OVERLAY  0x32315659    /**< Planar mode: Y + V + U  (3 planes) */
+#define SDL_IYUV_OVERLAY  0x56555949    /**< Planar mode: Y + U + V  (3 planes) */
+#define SDL_YUY2_OVERLAY  0x32595559    /**< Packed mode: Y0+U0+Y1+V0 (1 plane) */
+#define SDL_UYVY_OVERLAY  0x59565955    /**< Packed mode: U0+Y0+V0+Y1 (1 plane) */
+#define SDL_YVYU_OVERLAY  0x55595659    /**< Packed mode: Y0+V0+Y1+U0 (1 plane) */
+/*@}*//*Overlay formats*/
 
-/* The YUV hardware video overlay */
+/**
+ *  The YUV hardware video overlay.
+ */
 typedef struct SDL_Overlay
 {
-    Uint32 format;              /* Read-only */
-    int w, h;                   /* Read-only */
-    int planes;                 /* Read-only */
-    Uint16 *pitches;            /* Read-only */
-    Uint8 **pixels;             /* Read-write */
+    Uint32 format;              /**< Read-only */
+    int w, h;                   /**< Read-only */
+    int planes;                 /**< Read-only */
+    Uint16 *pitches;            /**< Read-only */
+    Uint8 **pixels;             /**< Read-write */
 
-    /* Hardware-specific surface info */
+    /** 
+     *  \name Hardware-specific surface info
+     */
+    /*@{*/
     struct private_yuvhwfuncs *hwfuncs;
     struct private_yuvhwdata *hwdata;
+    /*@}*//*Hardware-specific surface info*/
 
-    /* Special flags */
-    Uint32 hw_overlay:1;        /* Flag: This overlay hardware accelerated? */
+    /** 
+     *  \name Special flags
+     */
+    /*@{*/
+    Uint32 hw_overlay:1;        /**< Flag: This overlay hardware accelerated? */
     Uint32 UnusedBits:31;
+    /*@}*//*Special flags*/
 } SDL_Overlay;
 
 typedef enum
@@ -143,64 +182,17 @@ typedef enum
 
 struct SDL_SysWMinfo;
 
-/* Obsolete or renamed key codes */
+/**
+ *  \name Obsolete or renamed key codes
+ */
+/*@{*/
 
-/* These key constants were renamed for clarity or consistency. */
-#define SDLK_0	'0'
-#define SDLK_1	'1'
-#define SDLK_2	'2'
-#define SDLK_3	'3'
-#define SDLK_4	'4'
-#define SDLK_5	'5'
-#define SDLK_6	'6'
-#define SDLK_7	'7'
-#define SDLK_8	'8'
-#define SDLK_9	'9'
-#define SDLK_a  'a'
-#define SDLK_b  'b'
-#define SDLK_c  'c'
-#define SDLK_d  'd'
-#define SDLK_e  'e'
-#define SDLK_f  'f'
-#define SDLK_g  'g'
-#define SDLK_h  'h'
-#define SDLK_i  'i'
-#define SDLK_j  'j'
-#define SDLK_k  'k'
-#define SDLK_l  'l'
-#define SDLK_m  'm'
-#define SDLK_n  'n'
-#define SDLK_o  'o'
-#define SDLK_p  'p'
-#define SDLK_q  'q'
-#define SDLK_r  'r'
-#define SDLK_s  's'
-#define SDLK_t  't'
-#define SDLK_u  'u'
-#define SDLK_v  'v'
-#define SDLK_w  'w'
-#define SDLK_x  'x'
-#define SDLK_y  'y'
-#define SDLK_z  'z'
-#define SDLK_QUOTE      '\''
-#define SDLK_MINUS      '-'
-#define SDLK_BACKQUOTE  '`'
-#define SDLK_EXCLAIM    '!'
-#define SDLK_QUOTEDBL   '"'
-#define SDLK_HASH       '#'
-#define SDLK_DOLLAR     '$'
-#define SDLK_AMPERSAND  '&'
-#define SDLK_LEFTPAREN  '('
-#define SDLK_RIGHTPAREN ')'
-#define SDLK_ASTERISK   '*'
-#define SDLK_PLUS       '+'
-#define SDLK_COLON      ':'
-#define SDLK_LESS       '<'
-#define SDLK_GREATER    '>'
-#define SDLK_QUESTION   '?'
-#define SDLK_AT         '@'
-#define SDLK_CARET      '^'
-#define SDLK_UNDERSCORE '_'
+/** 
+ *  \name Renamed keys
+ *
+ *  These key constants were renamed for clarity or consistency. 
+ */
+/*@{*/
 #define SDLK_KP0 SDLK_KP_0
 #define SDLK_KP1 SDLK_KP_1
 #define SDLK_KP2 SDLK_KP_2
@@ -214,19 +206,35 @@ struct SDL_SysWMinfo;
 #define SDLK_NUMLOCK SDLK_NUMLOCKCLEAR
 #define SDLK_SCROLLOCK SDLK_SCROLLLOCK
 #define SDLK_PRINT SDLK_PRINTSCREEN
+/*@}*//*Renamed keys*/
 
-/* The META modifier is equivalent to the GUI modifier from the USB standard */
+/**
+ *  \name META modifier
+ *  
+ *  The META modifier is equivalent to the GUI modifier from the USB standard.
+ */
+/*@{*/
 #define KMOD_LMETA KMOD_LGUI
 #define KMOD_RMETA KMOD_RGUI
 #define KMOD_META KMOD_GUI
+/*@}*//*META modifier*/
 
-/* These keys don't appear in the USB specification (or at least not under those names). I'm unsure if the following assignments make sense or if these codes should be defined as actual additional SDLK_ constants. */
+/** 
+ *  \name Not in USB
+ *
+ *  These keys don't appear in the USB specification (or at least not under 
+ *  those names). I'm unsure if the following assignments make sense or if these
+ *  codes should be defined as actual additional SDLK_ constants.
+ */
+/*@{*/
 #define SDLK_LSUPER SDLK_LMETA
 #define SDLK_RSUPER SDLK_RMETA
 #define SDLK_COMPOSE SDLK_APPLICATION
 #define SDLK_BREAK SDLK_STOP
 #define SDLK_EURO SDLK_2
+/*@}*//*Not in USB*/
 
+/*@}*//*Obsolete or renamed key codes*/
 
 #define SDL_SetModuleHandle(x)
 #define SDL_AllocSurface    SDL_CreateRGBSurface
@@ -286,6 +294,14 @@ extern DECLSPEC void SDLCALL SDL_GL_SwapBuffers(void);
 extern DECLSPEC int SDLCALL SDL_EnableKeyRepeat(int delay, int interval);
 extern DECLSPEC void SDLCALL SDL_GetKeyRepeat(int *delay, int *interval);
 extern DECLSPEC int SDLCALL SDL_EnableUNICODE(int enable);
+
+#define SDL_RenderPoint SDL_RenderDrawPoint
+#define SDL_RenderLine SDL_RenderDrawLine
+#define SDL_RenderFill(X)  (X) ? SDL_RenderFillRect(X) : SDL_RenderClear()
+
+extern DECLSPEC int SDLCALL SDL_putenv(const char *variable);
+
+/*@}*//*Compatibility*/
 
 /* Ends C function definitions when using C++ */
 #ifdef __cplusplus

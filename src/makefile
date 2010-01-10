@@ -36,7 +36,7 @@ ifeq ("$(OS)","iphoneos")
   SS_IPHONE := 1
   LIB_DIR := ../lib/iPhone
   SDL_INC := ../include/SDL13
-  SDL := SDL-1.3.0-4563
+  SDL := SDL-1.3.0-5441
   IPHONE_VER := 2.2.1
   SS_CC := /Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/gcc-4.0  \
       -DIPHONE=1 -D__IPHONEOS__=1 -O2 \
@@ -57,7 +57,7 @@ ifeq ("$(OS)","iphonesim")
   SS_CONFIG := iphonesim
   LIB_DIR := ../lib/iPhone
   SDL_INC := ../include/SDL13
-  SDL := SDL-1.3.0-4563
+  SDL := SDL-1.3.0-5441
   SS_IPHONE := 1
   IPHONE_VER := 2.2.1
   SS_CC := /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/gcc-4.0  \
@@ -279,18 +279,21 @@ SDL := SDL-1.2.13
 	#cp patches/SDL/SDL_atomic.h $(SDL)/include
 SDL_INC := ../include/SDL12
 else
-SDL := SDL-1.3.0-4563
+SDL := SDL-1.3.0-5441
 SDL_INC := ../include/SDL13
 endif
 
 sdl:$(SDL)
 
-$(SDL):
+$(SDL): always
 	tar xzf tars/$(SDL).tgz
 	mkdir -p $(SDL_INC)
 	cp configs/sdl-makefile $(SDL)/Makefile
 ifndef SS_IPHONE
 	cp patches/SDL/SDL_config* $(SDL)/include
+else
+	cp patches/SDL-1.3.0-5441/SDL_mouse.c $(SDL)/src/events
+	cp patches/SDL-1.3.0-5441/SDL_renderer_gles.c $(SDL)/src/video
 endif
 	cd $(SDL); make
 	cp $(SDL)/libSDL$(SS_LIBEXT) $(LIB_DIR)

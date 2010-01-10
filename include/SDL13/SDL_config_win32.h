@@ -27,7 +27,8 @@
 
 /* This is a set of defines to configure the SDL features */
 
-#if defined(__GNUC__) || defined(__DMC__)
+#if !defined(_STDINT_H_) && (!defined(HAVE_STDINT_H) || !_HAVE_STDINT_H)
+#if defined(__GNUC__) || defined(__DMC__) || defined(__WATCOMC__)
 #define HAVE_STDINT_H	1
 #elif defined(_MSC_VER)
 typedef signed __int8 int8_t;
@@ -68,6 +69,7 @@ typedef unsigned int size_t;
 #endif
 typedef unsigned int uintptr_t;
 #endif /* __GNUC__ || _MSC_VER */
+#endif /* !_STDINT_H_ && !HAVE_STDINT_H */
 
 #ifdef _WIN64
 # define SIZEOF_VOIDP 8
@@ -147,13 +149,6 @@ typedef unsigned int uintptr_t;
 #define SDL_AUDIO_DRIVER_WINWAVEOUT	1
 #define SDL_AUDIO_DRIVER_DISK	1
 #define SDL_AUDIO_DRIVER_DUMMY	1
-
-/* Enable various cdrom drivers */
-#ifdef _WIN32_WCE
-#define SDL_CDROM_DISABLED	1
-#else
-#define SDL_CDROM_WIN32		1
-#endif
 
 /* Enable various input drivers */
 #ifdef _WIN32_WCE

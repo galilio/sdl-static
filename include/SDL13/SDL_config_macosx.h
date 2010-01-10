@@ -30,7 +30,12 @@
 
 /* This is a set of defines to configure the SDL features */
 
-#define SIZEOF_VOIDP 4
+#ifdef __LP64__
+	#define SIZEOF_VOIDP 8
+#else
+	#define SIZEOF_VOIDP 4
+#endif
+
 #define SDL_HAS_64BIT_TYPE	1
 
 /* Useful headers */
@@ -55,6 +60,7 @@
 #define HAVE_FREE	1
 #define HAVE_ALLOCA	1
 #define HAVE_GETENV	1
+#define HAVE_SETENV	1
 #define HAVE_PUTENV	1
 #define HAVE_UNSETENV	1
 #define HAVE_QSORT	1
@@ -100,27 +106,20 @@
 #define HAVE_SIGACTION	1
 #define HAVE_SETJMP	1
 #define HAVE_NANOSLEEP	1
+#define HAVE_SYSCONF	1
+#define HAVE_SYSCTLBYNAME 1
 
 /* Enable various audio drivers */
 #define SDL_AUDIO_DRIVER_COREAUDIO	1
-#define SDL_AUDIO_DRIVER_SNDMGR	1
 #define SDL_AUDIO_DRIVER_DISK	1
 #define SDL_AUDIO_DRIVER_DUMMY	1
-
-/* Enable various cdrom drivers */
-#define SDL_CDROM_MACOSX	1
 
 /* Enable various input drivers */
 #define SDL_JOYSTICK_IOKIT	1
 #define SDL_HAPTIC_IOKIT	1
 
 /* Enable various shared object loading systems */
-#ifdef __ppc__
-/* For Mac OS X 10.2 compatibility */
-#define SDL_LOADSO_DLCOMPAT	1
-#else
 #define SDL_LOADSO_DLOPEN	1
-#endif
 
 /* Enable various threading systems */
 #define SDL_THREAD_PTHREAD	1
@@ -132,11 +131,27 @@
 /* Enable various video drivers */
 #define SDL_VIDEO_DRIVER_COCOA	1
 #define SDL_VIDEO_DRIVER_DUMMY	1
+#define SDL_VIDEO_DRIVER_X11 1
+#define SDL_VIDEO_DRIVER_X11_DYNAMIC "/usr/X11R6/lib/libX11.6.dylib"
+#define SDL_VIDEO_DRIVER_X11_DYNAMIC_XEXT "/usr/X11R6/lib/libXext.6.dylib"
+#define SDL_VIDEO_DRIVER_X11_DYNAMIC_XRANDR "/usr/X11R6/lib/libXrandr.2.dylib"
+#define SDL_VIDEO_DRIVER_X11_DYNAMIC_XRENDER "/usr/X11R6/lib/libXrender.1.dylib"
+#define SDL_VIDEO_DRIVER_X11_DYNAMIC_XINPUT "/usr/X11R6/lib/libXi.6.dylib"
+#define SDL_VIDEO_DRIVER_X11_DYNAMIC_XSS "/usr/X11R6/lib/libXss.6.dylib"
+#define SDL_VIDEO_DRIVER_X11_VIDMODE 1
+#define SDL_VIDEO_DRIVER_X11_XINERAMA 1
+#define SDL_VIDEO_DRIVER_X11_XRANDR 1
+#define SDL_VIDEO_DRIVER_X11_XINPUT 1
+#define SDL_VIDEO_DRIVER_X11_SCRNSAVER 1
+#define SDL_VIDEO_DRIVER_X11_XV 1
+
+#define SDL_VIDEO_RENDER_OGL	1
+#define SDL_VIDEO_RENDER_X11	1
 
 /* Enable OpenGL support */
 #define SDL_VIDEO_OPENGL	1
 #define SDL_VIDEO_OPENGL_CGL	1
-#define SDL_VIDEO_RENDER_OGL	1
+#define SDL_VIDEO_OPENGL_GLX	1
 
 /* Enable system power support */
 #define SDL_POWER_MACOSX 1
