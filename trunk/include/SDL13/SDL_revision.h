@@ -1,1 +1,1 @@
-#define SDL_REVISION 4563
+#define SDL_REVISION 5441

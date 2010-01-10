@@ -25,6 +25,7 @@
 
 #include "SDL_platform.h"
 
+#if !defined(_STDINT_H_) && (!defined(HAVE_STDINT_H) || !_HAVE_STDINT_H)
 typedef signed char int8_t;
 typedef unsigned char uint8_t;
 typedef signed short int16_t;
@@ -32,6 +33,14 @@ typedef unsigned short uint16_t;
 typedef signed int int32_t;
 typedef unsigned int uint32_t;
 typedef unsigned long uintptr_t;
+#endif /* !_STDINT_H_ && !HAVE_STDINT_H */
+
+#ifdef __LP64__
+#define SIZEOF_VOIDP 8
+#else
+#define SIZEOF_VOIDP 4
+#endif
+
 #define SDL_HAS_64BIT_TYPE	1
 
 #define HAVE_ALLOCA_H		1
@@ -52,7 +61,9 @@ typedef unsigned long uintptr_t;
 #define HAVE_FREE	1
 #define HAVE_ALLOCA	1
 #define HAVE_GETENV	1
+#define HAVE_SETENV	1
 #define HAVE_PUTENV	1
+#define HAVE_SETENV	1
 #define HAVE_UNSETENV	1
 #define HAVE_QSORT	1
 #define HAVE_ABS	1
@@ -97,14 +108,13 @@ typedef unsigned long uintptr_t;
 #define HAVE_SIGACTION	1
 #define HAVE_SETJMP	1
 #define HAVE_NANOSLEEP	1
+#define HAVE_SYSCONF	1
+#define HAVE_SYSCTLBYNAME 1
 
 /* enable iPhone version of Core Audio driver */
 #define SDL_AUDIO_DRIVER_COREAUDIOIPHONE 1
 /* Enable the dummy audio driver (src/audio/dummy/\*.c) */
 #define SDL_AUDIO_DRIVER_DUMMY	1
-
-/* Enable the stub cdrom driver (src/cdrom/dummy/\*.c) */
-#define SDL_CDROM_DISABLED	1
 
 /* Enable the stub haptic driver (src/haptic/dummy/\*.c) */
 #define SDL_HAPTIC_DISABLED	1
@@ -135,7 +145,7 @@ typedef unsigned long uintptr_t;
 #define SDL_POWER_MACOSX 1
 
 /* enable iPhone keyboard support */
-#define SDL_IPHONE_KEYBOARD 1
+#define SDL_IPHONE_KEYBOARD 0
 
 /* Enable emulation of multiple mice through multi-touch */
 #define SDL_IPHONE_MULTIPLE_MICE 1
