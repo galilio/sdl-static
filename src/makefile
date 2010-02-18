@@ -92,7 +92,7 @@ ifeq ("$(OS)","windows")
   LIB_DIR := ../lib/Windows
   SS_LIBEXT := .lib
   JCONFIG := jconfig.vc
-  SS_CC := cl.exe -nologo -MT -Zi -O2 -DWIN32
+  SS_CC := cl.exe -nologo -MT -Z7 -O2 -DWIN32
   SS_OBJEXT := .obj
   SS_OBJOUT := -Fo
   SS_CREATELIB := lib -out:
