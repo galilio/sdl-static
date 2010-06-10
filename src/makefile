@@ -1,10 +1,13 @@
 .PHONY: clean print zlib jpeg ogg vorbis freetype sdl sdl_ttf sdl_image sdl_mixer always
 
+ifeq ("$(OS)","")
 OS := $(OSTYPE)
 OS := $(OS:darwin%=darwin)
 OS := $(OS:linux%=linux)
 OS := $(OS:Linux%=linux)
 OS := $(OS:Windows%=windows)
+endif
+
 
 SS_LIBEXT := .a
 SS_OBJEXT := .o
@@ -14,7 +17,7 @@ EMPTY :=
 SPACE :=  $(EMPTY) $(EMPTY)
 SS_CREATELIB := ar -cr$(SPACE)
 SDL_INC := ../include/SDL12
-SDL := SDL-1.2.13
+SDL := SDL-1.2.12
 SS_CREATEDLL := gcc -dynamic -fPIC -o 
 
 ifeq ("$(OS)","darwin")
@@ -26,6 +29,29 @@ ifeq ("$(OS)","darwin")
   SS_DLLEXT := .dylib
 endif
 
+ifeq ("$(OS)","android")
+ifeq ("$(ANDROID_NDK_ROOT)","")
+default:
+	@echo "Please set ANDROID_NDK_ROOT"
+endif
+
+  ANDROID_HOST := $(OSTYPE)
+  ANDROID_HOST := $(ANDROID_HOST:darwin%=darwin-x86)
+  ANDROID_HOST := $(ANDROID_HOST:Windows%=windows)
+
+  SS_ANDROID := 1
+  export SS_ANDROID
+  SS_CONFIG := android
+  LIB_DIR := ../lib/Android
+  #JCONFIG := jconfig.mac
+  SS_DLLEXT := .so
+  SDL := ERROR
+  SS_CC := "${ANDROID_NDK_ROOT}/build/prebuilt/${ANDROID_HOST}/arm-eabi-4.4.0/bin/arm-eabi-gcc" "-I${ANDROID_NDK_ROOT}/build/platforms/android-5/arch-arm/usr/include" -fpic -fvisibility=hidden -mthumb-interwork -ffunction-sections -funwind-tables -fstack-protector -fno-short-enums -frtti -D__ARM_ARCH_5__ -D__ARM_ARCH_5T__ -D__ARM_ARCH_5E__ -D__ARM_ARCH_5TE__ -Wno-psabi -march=armv5te -mtune=xscale -msoft-float -mthumb -Os -fomit-frame-pointer -fno-strict-aliasing -finline-limit=64 -DANDROID -Wa,--noexecstack -O2 -DNDEBUG -g -c
+  SS_RANLIB := "${ANDROID_NDK_ROOT}/build/prebuilt/${ANDROID_HOST}/arm-eabi-4.4.0/bin/arm-eabi-ranlib"
+endif
+
+
+
 ifeq ("$(OS)","iphoneos")
   SS_IPHONEOS := 1
   SS_LIBEXT := .iphoneos.a
@@ -35,14 +61,14 @@ ifeq ("$(OS)","iphoneos")
   SS_CONFIG := iphoneos
   SS_IPHONE := 1
   LIB_DIR := ../lib/iPhone
-  SDL_INC := ../include/SDL13
-  SDL := SDL-1.3.0-5441
-  IPHONE_VER := 2.2.1
-  SS_CC := /Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/gcc-4.0  \
+  SDL_INC := ../include/SDL12
+  SDL := ERROR
+  IPHONE_VER := 3.2
+  SS_CC := /Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/gcc  \
       -DIPHONE=1 -D__IPHONEOS__=1 -O2 \
-      -I../../include/SDL13 -DSDL13 \
+      -I../../include/SDL12 -DSDL12 \
       -arch armv6 -fmessage-length=0 -pipe -Wno-trigraphs -fpascal-strings \
-      -fasm-blocks -Wreturn-type -Wunused-variable  \
+      -Wreturn-type -Wunused-variable  \
        -I/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS$(IPHONE_VER).sdk/usr/include/ \
       -isysroot /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS$(IPHONE_VER).sdk \
 
@@ -56,15 +82,15 @@ ifeq ("$(OS)","iphonesim")
   JCONFIG := jconfig.mac
   SS_CONFIG := iphonesim
   LIB_DIR := ../lib/iPhone
-  SDL_INC := ../include/SDL13
-  SDL := SDL-1.3.0-5441
+  SDL_INC := ../include/SDL12
+  SDL := ERROR
   SS_IPHONE := 1
-  IPHONE_VER := 2.2.1
-  SS_CC := /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/gcc-4.0  \
+  IPHONE_VER := 3.2
+  SS_CC := /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/gcc  \
       -DIPHONE=1 -D__IPHONESIM__=1 -O2 \
-      -I../../include/SDL13 -DSDL13 \
+      -I../../include/SDL12 -DSDL12 \
       -arch i386 -fmessage-length=0 -pipe -Wno-trigraphs -fpascal-strings \
-      -fasm-blocks -Wreturn-type -Wunused-variable  \
+      -Wreturn-type -Wunused-variable  \
        -I/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneOS$(IPHONE_VER).sdk/usr/include/ \
       -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator$(IPHONE_VER).sdk \
 
@@ -111,19 +137,25 @@ export SS_CREATEDLL
 export SDL_INC
 
 all: print 
+ifndef SS_ANDROID
 all: zlib 
+endif
 all: png 
 all: jpeg 
+ifndef SS_ANDROID
 all: ogg 
 all: vorbis 
+endif
 all: freetype 
 ifndef SS_IPHONE
+ifndef SS_ANDROID
 all: smpeg 
-endif
 all: sdl 
 all: sdl_ttf 
 all: sdl_image 
 all: sdl_mixer
+endif
+endif
 
 print:
 	@echo "OS: " $(OSTYPE)
@@ -165,6 +197,9 @@ else
 	cd $(PNG); make -f makefile
 endif
 	cp $(PNG)/libpng$(SS_LIBEXT) $(LIB_DIR)
+ifdef SS_RANLIB
+	$(SS_RANLIB) $(LIB_DIR)/libpng$(SS_LIBEXT)
+endif
 	cp $(PNG)/png.h $(PNG)/pngconf.h ../include
 
 clean::
@@ -188,6 +223,9 @@ endif
 	cp configs/jconfig.h configs/jconfig.mac configs/jconfig.iphoneos  configs/jconfig.vc ../include
 	cp $(JPEG)/jpeglib.h  $(JPEG)/jmorecfg.h ../include
 	cp $(JPEG)/libjpeg$(SS_LIBEXT) $(LIB_DIR)
+ifdef SS_RANLIB
+	$(SS_RANLIB) $(LIB_DIR)/libjpeg$(SS_LIBEXT)
+endif
 
 clean::
 	rm -rf $(JPEG)
@@ -245,6 +283,9 @@ $(FREETYPE):
 	cp patches/freetype/ftconfig.h $(FREETYPE)/include/freetype/config
 	cd $(FREETYPE); make
 	cp $(FREETYPE)/libfreetype$(SS_LIBEXT) $(LIB_DIR)
+ifdef SS_RANLIB
+	$(SS_RANLIB) $(LIB_DIR)/libfreetype$(SS_LIBEXT)
+endif
 	cp $(FREETYPE)/include/ft2build.h ../include
 	cp -r $(FREETYPE)/include/freetype ../include
 
@@ -273,15 +314,8 @@ clean::
 # --- SDL ------------------------
 
 ifndef SS_IPHONE
-SDL := SDL-1.2.13
-	#cp patches/SDL/SDL_win32window.c $(SDL)/src/video/win32
-	#cp patches/SDL/SDL_sysvideo.h $(SDL)/src/video
-	#cp patches/SDL/SDL_atomic.h $(SDL)/include
+SDL := SDL-1.2.14
 SDL_INC := ../include/SDL12
-else
-SDL := SDL-1.3.0-5441
-SDL_INC := ../include/SDL13
-endif
 
 sdl:$(SDL)
 
@@ -289,12 +323,8 @@ $(SDL): always
 	tar xzf tars/$(SDL).tgz
 	mkdir -p $(SDL_INC)
 	cp configs/sdl-makefile $(SDL)/Makefile
-ifndef SS_IPHONE
 	cp patches/SDL/SDL_config* $(SDL)/include
-else
-	cp patches/SDL-1.3.0-5441/SDL_mouse.c $(SDL)/src/events
-	cp patches/SDL-1.3.0-5441/SDL_renderer_gles.c $(SDL)/src/video
-endif
+	cp patches/SDL/SDL_QuartzVideo.m $(SDL)/src/video/quartz
 	cd $(SDL); make
 	cp $(SDL)/libSDL$(SS_LIBEXT) $(LIB_DIR)
 ifdef SS_WINDOWS
@@ -304,6 +334,7 @@ endif
 
 clean::
 	rm -rf $(SDL)
+
 
 # --- SDL_TTF ------------------------
 
@@ -358,5 +389,5 @@ clean::
 	rm -rf $(SDL_MIXER)
 
 
-
+endif 
 
