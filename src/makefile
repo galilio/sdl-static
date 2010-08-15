@@ -213,14 +213,14 @@ jpeg:$(JPEG)
 
 $(JPEG):
 	tar xvzf tars/$(JPEG).tgz
-	cp configs/jconfig.h configs/jconfig.mac configs/jconfig.iphoneos  configs/jconfig.vc $(JPEG)
+	cp configs/jconfig.h configs/jconfig.mac configs/jconfig.iphoneos  configs/jconfig.vc configs/jconfig.linux $(JPEG)
 ifdef SS_WINDOWS
 	cd $(JPEG); unset MAKEFLAGS; nmake -f makefile.vc nodebug=1
 else
 	cp configs/jpeg-makefile $(JPEG)/Makefile
 	cd $(JPEG); make -f Makefile nodebug=1
 endif
-	cp configs/jconfig.h configs/jconfig.mac configs/jconfig.iphoneos  configs/jconfig.vc ../include
+	cp configs/jconfig.h configs/jconfig.mac configs/jconfig.iphoneos  configs/jconfig.vc configs/jconfig.linux ../include
 	cp $(JPEG)/jpeglib.h  $(JPEG)/jmorecfg.h ../include
 	cp $(JPEG)/libjpeg$(SS_LIBEXT) $(LIB_DIR)
 ifdef SS_RANLIB
