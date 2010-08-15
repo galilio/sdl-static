@@ -6,6 +6,8 @@
 #include "jconfig.mac"
 #elif defined(_WIN32)
 #include "jconfig.vc"
+#else
+#include "jconfig.vc"
 #endif
 
 
