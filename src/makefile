@@ -68,7 +68,7 @@ ifeq ("$(OS)","iphoneos")
       -DIPHONE=1 -D__IPHONEOS__=1 -O2 \
       -I../../include/SDL12 -DSDL12 \
       -arch armv6 -fmessage-length=0 -pipe -Wno-trigraphs -fpascal-strings \
-      -Wreturn-type -Wunused-variable  \
+      -Wreturn-type -Wunused-variable -fno-stack-protector  \
        -I/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS$(IPHONE_VER).sdk/usr/include/ \
       -isysroot /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS$(IPHONE_VER).sdk \
 
@@ -90,7 +90,7 @@ ifeq ("$(OS)","iphonesim")
       -DIPHONE=1 -D__IPHONESIM__=1 -O2 \
       -I../../include/SDL12 -DSDL12 \
       -arch i386 -fmessage-length=0 -pipe -Wno-trigraphs -fpascal-strings \
-      -Wreturn-type -Wunused-variable  \
+      -Wreturn-type -Wunused-variable  -fno-stack-protector \
        -I/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneOS$(IPHONE_VER).sdk/usr/include/ \
       -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator$(IPHONE_VER).sdk \
 
