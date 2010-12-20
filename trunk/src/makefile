@@ -9,6 +9,7 @@ OS := $(OS:Windows%=windows)
 endif
 
 
+
 SS_LIBEXT := .a
 SS_OBJEXT := .o
 SS_CC := gcc -O2
@@ -105,7 +106,12 @@ ifeq ("$(OS)","linux")
   SS_CONFIG := linux
   SS_LINUX := 1
   export SS_LINUX
-  LIB_DIR := ../lib/Linux
+  ifdef SS_64
+   SS_CC += -fPIC
+   LIB_DIR := ../lib/Linux64
+  else
+   LIB_DIR := ../lib/Linux
+  endif
   JCONFIG := jconfig.linux
   SS_DLLEXT := .dso
 endif
