@@ -1,4 +1,4 @@
-.PHONY: clean print zlib jpeg ogg vorbis freetype sdl sdl_ttf sdl_image sdl_mixer always
+.PHONY: clean print zlib jpeg ogg vorbis freetype sdl sdl_ttf sdl_image sdl_mixer always curl
 
 ifeq ("$(OS)","")
 OS := $(OSTYPE)
@@ -31,7 +31,8 @@ ifeq ("$(OS)","darwin")
 endif
 
 ifeq ("$(OS)","android")
-ifeq ("$(ANDROID_NDK_ROOT)","")
+
+ifeq ("x$(ANDROID_NDK_ROOT)","x")
 default:
 	@echo "Please set ANDROID_NDK_ROOT"
 endif
@@ -40,6 +41,9 @@ endif
   ANDROID_HOST := $(ANDROID_HOST:darwin%=darwin-x86)
   ANDROID_HOST := $(ANDROID_HOST:Windows%=windows)
 
+  PATH := $(ANDROID_NDK_ROOT)/toolchains/arm-linux-androideabi-4.4.3/prebuilt/$(ANDROID_HOST)/arm-linux-androideabi/bin:$(ANDROID_NDK_ROOT)/toolchains/arm-linux-androideabi-4.4.3/prebuilt/$(ANDROID_HOST)/libexec/gcc/arm-linux-androideabi/4.4.3:$(PATH)
+
+
   SS_ANDROID := 1
   export SS_ANDROID
   SS_CONFIG := android
@@ -47,8 +51,14 @@ endif
   #JCONFIG := jconfig.mac
   SS_DLLEXT := .so
   SDL := ERROR
-  SS_CC := "${ANDROID_NDK_ROOT}/build/prebuilt/${ANDROID_HOST}/arm-eabi-4.4.0/bin/arm-eabi-gcc" "-I${ANDROID_NDK_ROOT}/build/platforms/android-5/arch-arm/usr/include" -fpic -fvisibility=hidden -mthumb-interwork -ffunction-sections -funwind-tables -fstack-protector -fno-short-enums -frtti -D__ARM_ARCH_5__ -D__ARM_ARCH_5T__ -D__ARM_ARCH_5E__ -D__ARM_ARCH_5TE__ -Wno-psabi -march=armv5te -mtune=xscale -msoft-float -mthumb -Os -fomit-frame-pointer -fno-strict-aliasing -finline-limit=64 -DANDROID -Wa,--noexecstack -O2 -DNDEBUG -g -c
-  SS_RANLIB := "${ANDROID_NDK_ROOT}/build/prebuilt/${ANDROID_HOST}/arm-eabi-4.4.0/bin/arm-eabi-ranlib"
+  SS_CC :=  gcc \
+ "-I${ANDROID_NDK_ROOT}/toolchains/arm-linux-androideabi-4.4.3/prebuilt/${ANDROID_HOST}/lib/gcc/arm-linux-androideabi/4.4.3/include/" \
+ "-I${ANDROID_NDK_ROOT}/platforms/android-5/arch-arm/usr/include/" \
+ "-I${ANDROID_NDK_ROOT}/sources/cxx-stl/gnu-libstdc++/libs/armeabi/include" \
+ "-I${ANDROID_NDK_ROOT}/sources/cxx-stl/gnu-libstdc++/include/" \
+ "-I${ANDROID_NDK_ROOT}/sources/cxx-stl/gnu-libstdc++/include/tr1" \
+-fpic -fvisibility=hidden -mthumb-interwork -ffunction-sections -funwind-tables -fstack-protector -fno-short-enums -frtti -D__ARM_ARCH_5__ -D__ARM_ARCH_5T__ -D__ARM_ARCH_5E__ -D__ARM_ARCH_5TE__ -Wno-psabi -march=armv5te -mtune=xscale -msoft-float -mthumb -Os -fomit-frame-pointer -fno-strict-aliasing -finline-limit=64 -DANDROID -Wa,--noexecstack -O2 -DNDEBUG -g -c
+  SS_RANLIB := "ranlib"
 endif
 
 
@@ -64,7 +74,7 @@ ifeq ("$(OS)","iphoneos")
   LIB_DIR := ../lib/iPhone
   SDL_INC := ../include/SDL12
   SDL := ERROR
-  IPHONE_VER := 3.2
+  IPHONE_VER := 4.2
   SS_CC := /Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/gcc  \
       -DIPHONE=1 -D__IPHONEOS__=1 -O2 \
       -I../../include/SDL12 -DSDL12 \
@@ -146,6 +156,7 @@ all: print
 ifndef SS_ANDROID
 all: zlib 
 endif
+all: curl 
 all: png 
 all: jpeg 
 ifndef SS_ANDROID
@@ -186,6 +197,29 @@ endif
 
 clean::
 	rm -rf $(ZLIB)
+
+
+
+# --- CURL ------------------------
+CURL := curl-7.21.4
+
+curl:$(CURL)
+
+$(CURL):
+	tar xvzf tars/$(CURL).tgz
+	cp configs/curl-makefile $(CURL)/lib/Makefile
+	cp configs/curl_config.gcc $(CURL)/lib/curl_config.h
+	cp patches/curl/curlbuild.h $(CURL)/include/curl
+	cd $(CURL)/lib; make -f Makefile
+	cp $(CURL)/lib/libcurl$(SS_LIBEXT) $(LIB_DIR)
+	mkdir -p ../include/curl
+	cp $(CURL)/include/curl/*.h ../include/curl
+
+clean::
+	rm -rf $(CURL)
+
+
+
 
 # --- PNG ------------------------
 
