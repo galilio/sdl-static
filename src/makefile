@@ -2,13 +2,13 @@
 
 ifeq ("$(OS)","")
 OS := $(OSTYPE)
+endif
 OS := $(OS:darwin%=darwin)
 OS := $(OS:linux%=linux)
 OS := $(OS:Linux%=linux)
 OS := $(OS:Windows%=windows)
-endif
 
-
+TAR_ARGS := --no-same-owner
 
 SS_LIBEXT := .a
 SS_OBJEXT := .o
@@ -108,10 +108,6 @@ ifeq ("$(OS)","iphonesim")
 endif
 
 
-
-
-
-
 ifeq ("$(OS)","linux")
   SS_CONFIG := linux
   SS_LINUX := 1
@@ -140,6 +136,7 @@ ifeq ("$(OS)","windows")
   SS_CREATELIB := lib -out:
   SS_DLLEXT := .dll
 endif
+
 
 
 export SS_CONFIG
@@ -175,7 +172,7 @@ endif
 endif
 
 print:
-	@echo "OS: " $(OSTYPE)
+	@echo "OS: " $(OS)
 
 # --- ZLIB ------------------------
 ZLIB := zlib-1.2.3
@@ -183,7 +180,7 @@ ZLIB := zlib-1.2.3
 zlib:$(ZLIB)
 
 $(ZLIB):
-	tar xvzf tars/$(ZLIB).tgz
+	tar xvzf tars/$(ZLIB).tgz $(TAR_ARGS)
 ifdef SS_WINDOWS
 	cp patches/zlib/Makefile.msc $(ZLIB)/win32
 	cd $(ZLIB); unset MAKEFLAGS; nmake -f win32/Makefile.msc
@@ -206,14 +203,16 @@ CURL := curl-7.21.4
 curl:$(CURL)
 
 $(CURL):
-	tar xvzf tars/$(CURL).tgz
+	tar xvzf tars/$(CURL).tgz $(TAR_ARGS)
 	cp configs/curl-makefile $(CURL)/lib/Makefile
 	cp configs/curl_config.gcc $(CURL)/lib/curl_config.h
 	cp patches/curl/curlbuild.h $(CURL)/include/curl
 	cd $(CURL)/lib; make -f Makefile
 	cp $(CURL)/lib/libcurl$(SS_LIBEXT) $(LIB_DIR)
 	mkdir -p ../include/curl
+ifndef SS_WINDOWS
 	cp $(CURL)/include/curl/*.h ../include/curl
+endif
 
 clean::
 	rm -rf $(CURL)
@@ -228,7 +227,7 @@ PNG := libpng-1.2.24
 png:$(PNG)
 
 $(PNG):
-	tar xvzf tars/$(PNG).tgz
+	tar xvzf tars/$(PNG).tgz $(TAR_ARGS)
 ifdef SS_WINDOWS
 	cp configs/png-nmake-win32 $(PNG)/makefile
 	cd $(PNG); unset MAKEFLAGS; nmake -f makefile
@@ -252,7 +251,7 @@ JPEG := jpeg-6b
 jpeg:$(JPEG)
 
 $(JPEG):
-	tar xvzf tars/$(JPEG).tgz
+	tar xvzf tars/$(JPEG).tgz $(TAR_ARGS)
 	cp configs/jconfig.h configs/jconfig.mac configs/jconfig.iphoneos  configs/jconfig.vc configs/jconfig.linux $(JPEG)
 ifdef SS_WINDOWS
 	cd $(JPEG); unset MAKEFLAGS; nmake -f makefile.vc nodebug=1
@@ -277,7 +276,7 @@ OGG := libogg-1.1.3
 ogg:$(OGG)
 
 $(OGG):
-	tar xvzf tars/$(OGG).tgz
+	tar xvzf tars/$(OGG).tgz $(TAR_ARGS)
 	cp configs/ogg-config_types.h $(OGG)/include/ogg/config_types.h
 	cp configs/ogg-makefile $(OGG)/Makefile
 	cd $(OGG); unset MAKEFLAGS; make
@@ -298,7 +297,7 @@ VORBIS := libvorbis-1.2.0
 vorbis:$(VORBIS)
 
 $(VORBIS):
-	tar xvzf tars/$(VORBIS).tgz
+	tar xvzf tars/$(VORBIS).tgz $(TAR_ARGS)
 	cp configs/vorbis-makefile $(VORBIS)/Makefile
 	cd $(VORBIS); make
 	cp $(VORBIS)/libvorbis$(SS_LIBEXT) $(LIB_DIR)
@@ -318,7 +317,7 @@ FREETYPE := freetype-2.3.9
 freetype:$(FREETYPE)
 
 $(FREETYPE):
-	tar xvzf tars/$(FREETYPE).tgz
+	tar xvzf tars/$(FREETYPE).tgz $(TAR_ARGS)
 	cp configs/freetype-makefile $(FREETYPE)/Makefile
 	cp patches/freetype/ftconfig.h $(FREETYPE)/include/freetype/config
 	cd $(FREETYPE); make
@@ -339,7 +338,7 @@ SMPEG := smpeg
 #smpeg:$(SMPEG)
 
 $(SMPEG):
-	tar xvzf tars/$(SMPEG).tgz
+	tar xvzf tars/$(SMPEG).tgz $(TAR_ARGS)
 	cp configs/smpeg-makefile $(SMPEG)/Makefile
 	cd $(SMPEG); make
 	cp $(SMPEG)/libsmpeg$(SS_LIBEXT) $(LIB_DIR)
@@ -359,18 +358,21 @@ SDL_INC := ../include/SDL12
 
 sdl:$(SDL)
 
-$(SDL): always
-	tar xzf tars/$(SDL).tgz
+$(SDL):
+	tar xzf tars/$(SDL).tgz $(TAR_ARGS)
 	mkdir -p $(SDL_INC)
 	cp configs/sdl-makefile $(SDL)/Makefile
-	cp patches/SDL/SDL_config* $(SDL)/include
+	cp patches/SDL/SDL_config.h $(SDL)/include
+	cp patches/SDL/SDL_config_macosx.h $(SDL)/include
+	cp patches/SDL/SDL_config_linux.h $(SDL)/include
 	cp patches/SDL/SDL_QuartzVideo.m $(SDL)/src/video/quartz
 	cd $(SDL); make
 	cp $(SDL)/libSDL$(SS_LIBEXT) $(LIB_DIR)
 ifdef SS_WINDOWS
 	cp $(SDL)/libSDLmain$(SS_LIBEXT) $(LIB_DIR)
-endif
+else
 	cp $(SDL)/include/*.h $(SDL_INC)
+endif
 
 clean::
 	rm -rf $(SDL)
@@ -383,7 +385,7 @@ SDL_TTF := SDL_ttf-2.0.9
 sdl_ttf:$(SDL_TTF)
 
 $(SDL_TTF):
-	tar xvzf tars/$(SDL_TTF).tgz
+	tar xvzf tars/$(SDL_TTF).tgz $(TAR_ARGS)
 	cp configs/sdl_ttf-makefile $(SDL_TTF)/Makefile
 	cd $(SDL_TTF); make
 	cp $(SDL_TTF)/libSDL_ttf$(SS_LIBEXT) $(LIB_DIR)
@@ -399,7 +401,7 @@ SDL_IMAGE := SDL_image-1.2.7
 sdl_image:$(SDL_IMAGE)
 
 $(SDL_IMAGE):
-	tar xvzf tars/$(SDL_IMAGE).tgz
+	tar xvzf tars/$(SDL_IMAGE).tgz $(TAR_ARGS)
 	cp configs/sdl_image-makefile $(SDL_IMAGE)/Makefile
 	cd $(SDL_IMAGE); make
 	cp $(SDL_IMAGE)/libSDL_image$(SS_LIBEXT) $(LIB_DIR)
@@ -416,7 +418,7 @@ SDL_MIXER := SDL_mixer-1.2.8
 sdl_mixer:$(SDL_MIXER)
 
 $(SDL_MIXER):
-	tar xvzf tars/$(SDL_MIXER).tgz
+	tar xvzf tars/$(SDL_MIXER).tgz $(TAR_ARGS)
 	cp configs/sdl_mixer-makefile $(SDL_MIXER)/Makefile
 	cp patches/SDL_mixer/mixer.c $(SDL_MIXER)
 	cp patches/SDL_mixer/SDL_mixer.h $(SDL_MIXER)
