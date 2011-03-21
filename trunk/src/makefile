@@ -96,7 +96,7 @@ ifeq ("$(OS)","iphonesim")
   SDL_INC := ../include/SDL12
   SDL := ERROR
   SS_IPHONE := 1
-  IPHONE_VER := 3.2
+  IPHONE_VER := 4.2
   SS_CC := /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/gcc  \
       -DIPHONE=1 -D__IPHONESIM__=1 -O2 \
       -I../../include/SDL12 -DSDL12 \
@@ -208,7 +208,9 @@ $(CURL):
 	cp configs/curl_config.gcc $(CURL)/lib/curl_config.h
 	cp patches/curl/curlbuild.h $(CURL)/include/curl
 	cd $(CURL)/lib; make -f Makefile
+ifndef SS_IPHONE
 	cp $(CURL)/lib/libcurl$(SS_LIBEXT) $(LIB_DIR)
+endif
 	mkdir -p ../include/curl
 ifndef SS_WINDOWS
 	cp $(CURL)/include/curl/*.h ../include/curl

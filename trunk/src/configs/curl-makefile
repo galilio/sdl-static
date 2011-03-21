@@ -104,6 +104,14 @@ else
 CONFIG_FLAGS := -DHAVE_CONFIG_H -DCURL_STATICLIB 
 endif
 
+ifdef SS_IPHONE
+all:../../../lib/iPhone/libcurl.$(SS_CONFIG) $(CURL_OBJS)
+	cp $(CURL_OBJS) ../../../lib/iPhone/libcurl.$(SS_CONFIG)
+
+../../../lib/iPhone/libcurl.$(SS_CONFIG):
+	mkdir -p ../../../lib/iPhone/libcurl.$(SS_CONFIG)
+endif
+
 libcurl$(SS_LIBEXT):$(CURL_OBJS)
 	$(SS_CREATELIB)$@ $(CURL_OBJS)
 
