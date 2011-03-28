@@ -314,14 +314,13 @@ clean::
 
 # --- FREETYPE ------------------------
 
-FREETYPE := freetype-2.3.9
+FREETYPE := freetype-2.4.4
 
 freetype:$(FREETYPE)
 
 $(FREETYPE):
 	tar xvzf tars/$(FREETYPE).tgz $(TAR_ARGS)
 	cp configs/freetype-makefile $(FREETYPE)/Makefile
-	cp patches/freetype/ftconfig.h $(FREETYPE)/include/freetype/config
 	cd $(FREETYPE); make
 	cp $(FREETYPE)/libfreetype$(SS_LIBEXT) $(LIB_DIR)
 ifdef SS_RANLIB
