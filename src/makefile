@@ -52,11 +52,11 @@ endif
   SS_DLLEXT := .so
   SDL := ERROR
   SS_CC :=  gcc \
- "-I${ANDROID_NDK_ROOT}/toolchains/arm-linux-androideabi-4.4.3/prebuilt/${ANDROID_HOST}/lib/gcc/arm-linux-androideabi/4.4.3/include/" \
- "-I${ANDROID_NDK_ROOT}/platforms/android-5/arch-arm/usr/include/" \
- "-I${ANDROID_NDK_ROOT}/sources/cxx-stl/gnu-libstdc++/libs/armeabi/include" \
- "-I${ANDROID_NDK_ROOT}/sources/cxx-stl/gnu-libstdc++/include/" \
- "-I${ANDROID_NDK_ROOT}/sources/cxx-stl/gnu-libstdc++/include/tr1" \
+ "-I$(ANDROID_NDK_ROOT)/toolchains/arm-linux-androideabi-4.4.3/prebuilt/$(ANDROID_HOST)/lib/gcc/arm-linux-androideabi/4.4.3/include/" \
+ "-I$(ANDROID_NDK_ROOT)/sources/cxx-stl/gnu-libstdc++/include" \
+ "-I$(ANDROID_NDK_ROOT)/sources/cxx-stl/gnu-libstdc++/libs/armeabi/include" \
+ "-I$(ANDROID_NDK_ROOT)/platforms/android-5/arch-arm/usr/include" \
+-D_LINUX_STDDEF_H \
 -fpic -fvisibility=hidden -mthumb-interwork -ffunction-sections -funwind-tables -fstack-protector -fno-short-enums -frtti -D__ARM_ARCH_5__ -D__ARM_ARCH_5T__ -D__ARM_ARCH_5E__ -D__ARM_ARCH_5TE__ -Wno-psabi -march=armv5te -mtune=xscale -msoft-float -mthumb -Os -fomit-frame-pointer -fno-strict-aliasing -finline-limit=64 -DANDROID -Wa,--noexecstack -O2 -DNDEBUG -g -c
   SS_RANLIB := "ranlib"
 endif
