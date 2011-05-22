@@ -113,11 +113,13 @@ ifeq ("$(OS)","linux")
   SS_LINUX := 1
   export SS_LINUX
   ifdef SS_64
-   SS_CC += -fPIC
+   SS_CC += -fPIC -m64
    LIB_DIR := ../lib/Linux64
   else
+   SS_CC += -fPIC -m32
    LIB_DIR := ../lib/Linux
   endif
+  export SS_ABI
   JCONFIG := jconfig.linux
   SS_DLLEXT := .dso
 endif
