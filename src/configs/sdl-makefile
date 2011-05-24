@@ -250,6 +250,8 @@ SOURCES_UNIX += $(wildcard src/video/x11/*.c) \
 	        $(wildcard src/audio/dma/*.c) \
 	        $(wildcard src/audio/dsp/*.c) \
 	        $(wildcard src/audio/disk/*.c) \
+	        $(wildcard src/audio/pulse/*.c) \
+	        $(wildcard src/audio/alsa/*.c) \
 	        $(wildcard src/loadso/dlopen/*.c)
 endif
 
@@ -310,7 +312,7 @@ libSDLMain$(SS_LIBEXT):$(MAIN_OBJS)
 	$(SS_CREATELIB)$@ $(MAIN_OBJS)
 
 
-SDL_INCLUDES := -Iinclude -Isrc/events -Isrc/video
+SDL_INCLUDES := -Iinclude -Isrc/events -Isrc/video -I../../include
 
 %$(SS_OBJEXT):%.c
 	-mkdir -p obj
