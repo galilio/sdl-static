@@ -210,9 +210,7 @@ $(CURL):
 	cp configs/curl_config.gcc $(CURL)/lib/curl_config.h
 	cp patches/curl/curlbuild.h $(CURL)/include/curl
 	cd $(CURL)/lib; make -f Makefile
-ifndef SS_IPHONE
 	cp $(CURL)/lib/libcurl$(SS_LIBEXT) $(LIB_DIR)
-endif
 	mkdir -p ../include/curl
 ifndef SS_WINDOWS
 	cp $(CURL)/include/curl/*.h ../include/curl
