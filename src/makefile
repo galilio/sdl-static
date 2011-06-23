@@ -364,6 +364,7 @@ $(SDL):
 	mkdir -p $(SDL_INC)
 	cp configs/sdl-makefile $(SDL)/Makefile
 	cp patches/SDL/SDL_config.h $(SDL)/include
+	cp patches/SDL/SDL_video.h $(SDL)/include
 	cp patches/SDL/SDL_config_macosx.h $(SDL)/include
 	cp patches/SDL/SDL_config_linux.h $(SDL)/include
 	cp patches/SDL/SDL_QuartzVideo.m $(SDL)/src/video/quartz
@@ -371,6 +372,7 @@ $(SDL):
 	cp $(SDL)/libSDL$(SS_LIBEXT) $(LIB_DIR)
 ifdef SS_WINDOWS
 	cp $(SDL)/libSDLmain$(SS_LIBEXT) $(LIB_DIR)
+	cp $(SDL)/include/*.h $(SDL_INC)
 else
 	cp $(SDL)/include/*.h $(SDL_INC)
 endif
