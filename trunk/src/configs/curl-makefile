@@ -114,7 +114,7 @@ libcurl$(SS_LIBEXT):$(CURL_OBJS)
 	$(SS_CREATELIB)$@ $(CURL_OBJS)
 
 %$(SS_OBJEXT):%.c
-	$(SS_CC) $< -c $(SS_OBJOUT)$@ -I../include -Ilib  $(CONFIG_FLAGS)
+	$(SS_CC) $< -c $(SS_OBJOUT)$@ -I../include -I../../../include -Ilib  $(CONFIG_FLAGS)
 
 clean:
 	rm -f $(CURL_OBJS)
