@@ -30,6 +30,26 @@ ifeq ("$(OS)","darwin")
   SS_DLLEXT := .dylib
 endif
 
+ifeq ("$(OS)","webos")
+
+  ifeq ("$(PalmPDK)","PalmPDK")
+     PalmPDK := "/opt/PalmPDK"
+  endif
+
+  PATH := $(PalmPDK)/arm-gcc/bin:$(PATH)
+
+  SS_WEBOS := 1
+  export SS_WEBOS
+  SS_CONFIG := webos
+  LIB_DIR := ../lib/webOS
+  #JCONFIG := jconfig.mac
+  SS_DLLEXT := .so
+  SDL := ERROR
+  SS_CC := arm-none-linux-gnueabi-gcc -mfloat-abi=softfp -DWEBOS
+  SS_RANLIB :=  arm-none-linux-gnueabi-ranlib
+endif
+
+
 ifeq ("$(OS)","android")
 
 ifeq ("x$(ANDROID_NDK_ROOT)","x")
@@ -158,18 +178,22 @@ endif
 all: curl 
 all: png 
 all: jpeg 
+ifndef SS_WEBOS
 ifndef SS_ANDROID
 all: ogg 
 all: vorbis 
 endif
+endif
 all: freetype 
 ifndef SS_IPHONE
+ifndef SS_WEBOS
 ifndef SS_ANDROID
 all: smpeg 
 all: sdl 
 all: sdl_ttf 
 all: sdl_image 
 all: sdl_mixer
+endif
 endif
 endif
 
@@ -192,6 +216,9 @@ else
 	cd $(ZLIB); make
 	cp $(ZLIB)/libz$(SS_LIBEXT) $(LIB_DIR)
 endif
+ifdef SS_RANLIB
+	$(SS_RANLIB) $(LIB_DIR)/libz$(SS_LIBEXT)
+endif
 	cp $(ZLIB)/zlib.h $(ZLIB)/zconf.h ../include
 
 clean::
@@ -211,6 +238,9 @@ $(CURL):
 	cp patches/curl/curlbuild.h $(CURL)/include/curl
 	cd $(CURL)/lib; make -f Makefile
 	cp $(CURL)/lib/libcurl$(SS_LIBEXT) $(LIB_DIR)
+ifdef SS_RANLIB
+	$(SS_RANLIB) $(LIB_DIR)/libcurl$(SS_LIBEXT)
+endif
 	mkdir -p ../include/curl
 ifndef SS_WINDOWS
 	cp $(CURL)/include/curl/*.h ../include/curl
