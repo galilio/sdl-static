@@ -371,6 +371,7 @@ SMPEG := smpeg
 $(SMPEG):
 	tar xvzf tars/$(SMPEG).tgz $(TAR_ARGS)
 	cp configs/smpeg-makefile $(SMPEG)/Makefile
+	cp patches/smpeg/mpeglayer3.cpp $(SMPEG)/audio
 	cd $(SMPEG); make
 	cp $(SMPEG)/libsmpeg$(SS_LIBEXT) $(LIB_DIR)
 	cp $(SMPEG)/smpeg.h $(SMPEG)/MPEGfilter.h ../include/
