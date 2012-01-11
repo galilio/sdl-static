@@ -1,4 +1,4 @@
-.PHONY: clean print zlib jpeg ogg vorbis freetype sdl sdl_ttf sdl_image sdl_mixer always curl
+.PHONY: clean print zlib jpeg ogg vorbis freetype sdl sdl_ttf sdl_image sdl_mixer always curl curl-ssl
 
 ifeq ("$(OS)","")
 OS := $(OSTYPE)
@@ -28,6 +28,7 @@ ifeq ("$(OS)","darwin")
   LIB_DIR := ../lib/Mac
   JCONFIG := jconfig.mac
   SS_DLLEXT := .dylib
+  SS_CC := gcc -O2 -mmacosx-version-min=10.5 -isysroot /Developer/SDKs/MacOSX10.5.sdk
 endif
 
 ifeq ("$(OS)","webos")
@@ -249,6 +250,29 @@ endif
 clean::
 	rm -rf $(CURL)
 
+# --- CURL-SSL ------------------------
+
+CURL_SSL := ssl/curl-7.21.4
+
+OPEN_SSL := openssl-1.0.0f
+
+curl-ssl:$(CURL_SSL)
+
+$(CURL_SSL):
+	mkdir -p ssl
+	cd ssl; tar xvzf ../tars/$(CURL).tgz $(TAR_ARGS)
+	cd ssl; tar xvzf ../tars/$(OPEN_SSL).tgz $(TAR_ARGS)
+	cp configs/curl-ssl-makefile $(CURL_SSL)/lib/Makefile
+	cp configs/curl_config_ssl.gcc $(CURL_SSL)/lib/curl_config.h
+	cp patches/curl/curlbuild.h $(CURL_SSL)/include/curl
+	cd $(CURL_SSL)/lib; make -f Makefile
+	cp $(CURL_SSL)/lib/libcurl$(SS_LIBEXT) $(LIB_DIR)/libcurl_ssl$(SS_LIBEXT)
+ifdef SS_RANLIB
+	$(SS_RANLIB) $(LIB_DIR)/libcurl_ssl$(SS_LIBEXT)
+endif
+
+clean::
+	rm -rf ssl
 
 
 

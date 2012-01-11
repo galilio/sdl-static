@@ -1,0 +1,289 @@
+CURL_SRC := \
+   axtls.c \
+   base64.c \
+   connect.c \
+   content_encoding.c \
+   cookie.c \
+   curl_addrinfo.c \
+   curl_fnmatch.c \
+   curl_gethostname.c \
+   curl_memrchr.c \
+   curl_rand.c \
+   curl_rtmp.c \
+   curl_sspi.c \
+   curl_threads.c \
+   dict.c \
+   easy.c \
+   escape.c \
+   file.c \
+   fileinfo.c \
+   formdata.c \
+   ftp.c \
+   ftplistparser.c \
+   getenv.c \
+   getinfo.c \
+   gopher.c \
+   gtls.c \
+   hash.c \
+   hmac.c \
+   hostares.c \
+   hostasyn.c \
+   hostip.c \
+   hostip4.c \
+   hostip6.c \
+   hostsyn.c \
+   hostthre.c \
+   http.c \
+   http_chunks.c \
+   http_digest.c \
+   http_negotiate.c \
+   http_negotiate_sspi.c \
+   http_ntlm.c \
+   idn_win32.c \
+   if2ip.c \
+   imap.c \
+   inet_ntop.c \
+   inet_pton.c \
+   krb4.c \
+   krb5.c \
+   ldap.c \
+   llist.c \
+   md4.c \
+   md5.c \
+   memdebug.c \
+   mprintf.c \
+   multi.c \
+   netrc.c \
+   nonblock.c \
+   nss.c \
+   nwlib.c \
+   nwos.c \
+   openldap.c \
+   parsedate.c \
+   pingpong.c \
+   polarssl.c \
+   pop3.c \
+   progress.c \
+   qssl.c \
+   rawstr.c \
+   rtsp.c \
+   security.c \
+   select.c \
+   sendf.c \
+   share.c \
+   slist.c \
+   smtp.c \
+   socks.c \
+   socks_gssapi.c \
+   socks_sspi.c \
+   speedcheck.c \
+   splay.c \
+   ssh.c \
+   sslgen.c \
+   ssluse.c \
+   strdup.c \
+   strequal.c \
+   strerror.c \
+   strtok.c \
+   strtoofft.c \
+   telnet.c \
+   tftp.c \
+   timeval.c \
+   transfer.c \
+   url.c \
+   version.c \
+   warnless.c \
+   wildcard.c
+
+CURL_SRC +=	\
+	s2_meth.c   s2_srvr.c s2_clnt.c  s2_lib.c  s2_enc.c s2_pkt.c \
+	s3_meth.c   s3_srvr.c s3_clnt.c  s3_lib.c  s3_enc.c s3_pkt.c s3_both.c \
+	s23_meth.c s23_srvr.c s23_clnt.c s23_lib.c          s23_pkt.c \
+	t1_meth.c   t1_srvr.c t1_clnt.c  t1_lib.c  t1_enc.c \
+	d1_meth.c   d1_srvr.c d1_clnt.c  d1_lib.c  d1_pkt.c \
+	d1_both.c d1_enc.c \
+	ssl_lib.c ssl_err2.c ssl_cert.c ssl_sess.c \
+	ssl_ciph.c ssl_stat.c ssl_rsa.c \
+	ssl_asn1.c ssl_txt.c ssl_algs.c \
+	bio_ssl.c ssl_err.c kssl.c t1_reneg.c
+
+CRYPTO := ../../openssl-1.0.0f/crypto
+
+CURL_SRC +=	\
+   $(CRYPTO)/cryptlib.c $(CRYPTO)/mem.c $(CRYPTO)/mem_clr.c $(CRYPTO)/mem_dbg.c $(CRYPTO)/cversion.c $(CRYPTO)/ex_data.c \
+   $(CRYPTO)/cpt_err.c $(CRYPTO)/ebcdic.c $(CRYPTO)/uid.c $(CRYPTO)/o_time.c $(CRYPTO)/o_str.c $(CRYPTO)/o_dir.c
+
+
+CURL_SRC += $(wildcard $(CRYPTO)/aes/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/asn1/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/bio/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/bn/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/buffer/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/camellia/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/cast/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/cms/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/comp/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/conf/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/des/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/dh/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/dsa/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/dso/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/ec/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/ecdh/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/ecdsa/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/engine/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/err/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/evp/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/hmac/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/idea/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/krb5/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/lhash/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/md4/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/md5/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/mdc2/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/modes/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/objects/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/ocsp/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/pem/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/pkcs12/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/pkcs7/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/pqueue/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/rand/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/rc2/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/rc4/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/rc5/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/ripemd/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/rsa/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/seed/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/sha/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/stack/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/ts/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/txt_db/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/ui/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/whrlpool/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/x509/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/x509v3/*.c)
+CURL_SRC += $(wildcard $(CRYPTO)/bf/*.c)
+
+#CURL_SRC += $(wildcard $(CRYPTO)/jpake/*.c)
+#CURL_SRC += $(wildcard $(CRYPTO)/md2/*.c)
+#CURL_SRC += $(wildcard $(CRYPTO)/store/*.c)
+
+IGNORE :=  %bss_rtcp.c %/exp.c %/cnf_save.c %/test.c  \
+   %read_pwd.c \
+   %e_dsa.c \
+   %bio_ber.c \
+   %pk7_enc.c \
+   %bf/bf_opts.c \
+   %bf/bfspeed.c \
+   %bf/bftest.c \
+   %bf/bf_cbc.c \
+   %bn/bnspeed.c \
+   %bn/bntest.c \
+   %bn/divtest.c \
+   %bn/exp.c \
+   %bn/expspeed.c \
+   %bn/exptest.c \
+   %cast/cast_spd.c \
+   %cast/castopts.c \
+   %cast/casttest.c \
+   %conf/cnf_save.c \
+   %conf/test.c \
+   %des/des.c \
+   %des/des_opts.c \
+   %des/des_env.c \
+   %des/destest.c \
+   %des/rpw.c \
+   %des/speed.c \
+   %dh/dhtest.c \
+   %dh/p1024.c \
+   %dh/p192.c \
+   %dh/p512.c \
+   %dsa/dsagen.c \
+   %dsa/dsatest.c \
+   %ec/ectest.c \
+   %ecdh/ecdhtest.c \
+   %ecdsa/ecdsatest.c \
+   %engine/enginetest.c \
+   %evp/evp_test.c \
+   %hmac/hmactest.c \
+   %idea/idea_spd.c \
+   %idea/ideatest.c \
+   %jpake/jpaketest.c \
+   %lhash/lh_test.c \
+   %md2/md2.c \
+   %md2/md2test.c \
+   %md4/md4.c \
+   %md4/md4test.c \
+   %md5/md5.c \
+   %md5/md5test.c \
+   %mdc2/mdc2test.c \
+   %modes/cts128.c \
+   %pkcs7/dec.c \
+   %pkcs7/enc.c \
+   %pkcs7/sign.c \
+   %pkcs7/verify.c \
+   %pqueue/pq_test.c \
+   %rand/randtest.c \
+   %rc2/rc2speed.c \
+   %rc2/rc2test.c \
+   %rc2/tab.c \
+   %rc4/rc4.c \
+   %rc4/rc4speed.c \
+   %rc4/rc4test.c \
+   %rc5/rc5speed.c \
+   %rc5/rc5test.c \
+   %ripemd/rmd160.c \
+   %ripemd/rmdtest.c \
+   %rsa/rsa_test.c \
+   %sha/sha.c \
+   %sha/sha1.c \
+   %sha/sha1test.c \
+   %sha/sha256t.c \
+   %sha/sha512t.c \
+   %sha/shatest.c \
+   %threads/mttest.c \
+   %whrlpool/wp_test.c \
+   %x509v3/tabtest.c \
+   %x509v3/v3conf.c \
+   %x509v3/v3prin.c
+
+CURL_SRC := $(filter-out $(IGNORE), $(CURL_SRC) )
+
+CURL_OBJS := $(CURL_SRC:%.c=%$(SS_OBJEXT))
+
+ifdef SS_LINUX
+CONFIG_FLAGS += -DSS_LINUX
+endif
+
+VPATH = ../../openssl-1.0.0f/ssl $(not-dir $(CURL_SRC))
+
+
+ifdef SS_WINDOWS
+CONFIG_FLAGS := -DCURL_STATICLIB -DALLOW_MSVC6_WITHOUT_PSDK
+else
+CONFIG_FLAGS := -DHAVE_CONFIG_H -DCURL_STATICLIB 
+endif
+
+CONFIG_FLAGS += \
+  -I../../openssl-1.0.0f/include/openssl \
+  -I../../openssl-1.0.0f/ \
+  -I../../openssl-1.0.0f/ssl \
+  -I../../openssl-1.0.0f/crypto \
+  -I../../openssl-1.0.0f/crypto/asn1 \
+  -I../../openssl-1.0.0f/crypto/evp \
+  -I../../openssl-1.0.0f/MacOS \
+  -I../../openssl-1.0.0f/include \
+
+
+
+libcurl$(SS_LIBEXT):$(CURL_OBJS)
+	$(SS_CREATELIB)$@ $(CURL_OBJS)
+
+%$(SS_OBJEXT):%.c
+	$(SS_CC) $< -c $(SS_OBJOUT)$@ -I../include -I../../../include -Ilib  $(CONFIG_FLAGS)
+
+clean:
+	rm -f $(CURL_OBJS)
+
+
