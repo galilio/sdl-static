@@ -3,9 +3,15 @@
  */
 
 #define HAVE_DOT_CONFIG 1
+#ifdef WIN32
+#define CONFIG_PLATFORM_CYGWIN 1
+#define CONFIG_PLATFORM_WIN32 1
+#define STDCALL __stdcall
+#else
 #define CONFIG_PLATFORM_LINUX 1
 #undef CONFIG_PLATFORM_CYGWIN
 #undef CONFIG_PLATFORM_WIN32
+#endif
 
 /*
  * General Configuration
@@ -104,9 +110,7 @@
 /*
  * BigInt Options
  */
-#ifndef WIN32
 #include <stdint.h>
-#endif
 
 #undef CONFIG_BIGINT_CLASSICAL
 #undef CONFIG_BIGINT_MONTGOMERY
