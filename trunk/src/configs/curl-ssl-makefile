@@ -95,160 +95,30 @@ CURL_SRC := \
    warnless.c \
    wildcard.c
 
-CURL_SRC +=	\
-	s2_meth.c   s2_srvr.c s2_clnt.c  s2_lib.c  s2_enc.c s2_pkt.c \
-	s3_meth.c   s3_srvr.c s3_clnt.c  s3_lib.c  s3_enc.c s3_pkt.c s3_both.c \
-	s23_meth.c s23_srvr.c s23_clnt.c s23_lib.c          s23_pkt.c \
-	t1_meth.c   t1_srvr.c t1_clnt.c  t1_lib.c  t1_enc.c \
-	d1_meth.c   d1_srvr.c d1_clnt.c  d1_lib.c  d1_pkt.c \
-	d1_both.c d1_enc.c \
-	ssl_lib.c ssl_err2.c ssl_cert.c ssl_sess.c \
-	ssl_ciph.c ssl_stat.c ssl_rsa.c \
-	ssl_asn1.c ssl_txt.c ssl_algs.c \
-	bio_ssl.c ssl_err.c kssl.c t1_reneg.c
+AXTLS := ../../axTLS
 
-CRYPTO := ../../openssl-1.0.0f/crypto
+CURL_SRC += \
+   $(AXTLS)/crypto/aes.c \
+   $(AXTLS)/crypto/bigint.c \
+   $(AXTLS)/crypto/crypto_misc.c \
+   $(AXTLS)/crypto/hmac.c \
+   $(AXTLS)/crypto/md2.c \
+   $(AXTLS)/crypto/md5.c \
+   $(AXTLS)/crypto/rc4.c \
+   $(AXTLS)/crypto/rsa.c \
+   $(AXTLS)/crypto/sha1.c \
+   $(AXTLS)/ssl/asn1.c \
+   $(AXTLS)/ssl/gen_cert.c \
+   $(AXTLS)/ssl/loader.c \
+   $(AXTLS)/ssl/openssl.c \
+   $(AXTLS)/ssl/os_port.c \
+   $(AXTLS)/ssl/p12.c \
+   $(AXTLS)/ssl/tls1.c \
+   $(AXTLS)/ssl/tls1_clnt.c \
+   $(AXTLS)/ssl/tls1_svr.c \
+   $(AXTLS)/ssl/x509.c
 
-CURL_SRC +=	\
-   $(CRYPTO)/cryptlib.c $(CRYPTO)/mem.c $(CRYPTO)/mem_clr.c $(CRYPTO)/mem_dbg.c $(CRYPTO)/cversion.c $(CRYPTO)/ex_data.c \
-   $(CRYPTO)/cpt_err.c $(CRYPTO)/ebcdic.c $(CRYPTO)/uid.c $(CRYPTO)/o_time.c $(CRYPTO)/o_str.c $(CRYPTO)/o_dir.c
-
-
-CURL_SRC += $(wildcard $(CRYPTO)/aes/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/asn1/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/bio/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/bn/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/buffer/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/camellia/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/cast/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/cms/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/comp/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/conf/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/des/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/dh/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/dsa/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/dso/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/ec/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/ecdh/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/ecdsa/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/engine/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/err/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/evp/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/hmac/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/idea/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/krb5/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/lhash/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/md4/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/md5/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/mdc2/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/modes/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/objects/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/ocsp/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/pem/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/pkcs12/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/pkcs7/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/pqueue/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/rand/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/rc2/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/rc4/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/rc5/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/ripemd/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/rsa/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/seed/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/sha/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/stack/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/ts/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/txt_db/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/ui/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/whrlpool/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/x509/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/x509v3/*.c)
-CURL_SRC += $(wildcard $(CRYPTO)/bf/*.c)
-
-#CURL_SRC += $(wildcard $(CRYPTO)/jpake/*.c)
-#CURL_SRC += $(wildcard $(CRYPTO)/md2/*.c)
-#CURL_SRC += $(wildcard $(CRYPTO)/store/*.c)
-
-IGNORE :=  %bss_rtcp.c %/exp.c %/cnf_save.c %/test.c  \
-   %read_pwd.c \
-   %e_dsa.c \
-   %bio_ber.c \
-   %pk7_enc.c \
-   %bf/bf_opts.c \
-   %bf/bfspeed.c \
-   %bf/bftest.c \
-   %bf/bf_cbc.c \
-   %bn/bnspeed.c \
-   %bn/bntest.c \
-   %bn/divtest.c \
-   %bn/exp.c \
-   %bn/expspeed.c \
-   %bn/exptest.c \
-   %cast/cast_spd.c \
-   %cast/castopts.c \
-   %cast/casttest.c \
-   %conf/cnf_save.c \
-   %conf/test.c \
-   %des/des.c \
-   %des/des_opts.c \
-   %des/des_env.c \
-   %des/destest.c \
-   %des/rpw.c \
-   %des/speed.c \
-   %dh/dhtest.c \
-   %dh/p1024.c \
-   %dh/p192.c \
-   %dh/p512.c \
-   %dsa/dsagen.c \
-   %dsa/dsatest.c \
-   %ec/ectest.c \
-   %ecdh/ecdhtest.c \
-   %ecdsa/ecdsatest.c \
-   %engine/enginetest.c \
-   %evp/evp_test.c \
-   %hmac/hmactest.c \
-   %idea/idea_spd.c \
-   %idea/ideatest.c \
-   %jpake/jpaketest.c \
-   %lhash/lh_test.c \
-   %md2/md2.c \
-   %md2/md2test.c \
-   %md4/md4.c \
-   %md4/md4test.c \
-   %md5/md5.c \
-   %md5/md5test.c \
-   %mdc2/mdc2test.c \
-   %modes/cts128.c \
-   %pkcs7/dec.c \
-   %pkcs7/enc.c \
-   %pkcs7/sign.c \
-   %pkcs7/verify.c \
-   %pqueue/pq_test.c \
-   %rand/randtest.c \
-   %rc2/rc2speed.c \
-   %rc2/rc2test.c \
-   %rc2/tab.c \
-   %rc4/rc4.c \
-   %rc4/rc4speed.c \
-   %rc4/rc4test.c \
-   %rc5/rc5speed.c \
-   %rc5/rc5test.c \
-   %ripemd/rmd160.c \
-   %ripemd/rmdtest.c \
-   %rsa/rsa_test.c \
-   %sha/sha.c \
-   %sha/sha1.c \
-   %sha/sha1test.c \
-   %sha/sha256t.c \
-   %sha/sha512t.c \
-   %sha/shatest.c \
-   %threads/mttest.c \
-   %whrlpool/wp_test.c \
-   %x509v3/tabtest.c \
-   %x509v3/v3conf.c \
-   %x509v3/v3prin.c
-
-CURL_SRC := $(filter-out $(IGNORE), $(CURL_SRC) )
+# $(AXTLS)/ssl/tls1_svr.c \
 
 CURL_OBJS := $(CURL_SRC:%.c=%$(SS_OBJEXT))
 
@@ -256,7 +126,7 @@ ifdef SS_LINUX
 CONFIG_FLAGS += -DSS_LINUX
 endif
 
-VPATH = ../../openssl-1.0.0f/ssl $(not-dir $(CURL_SRC))
+VPATH = $(AXTLS)
 
 
 ifdef SS_WINDOWS
@@ -265,17 +135,7 @@ else
 CONFIG_FLAGS := -DHAVE_CONFIG_H -DCURL_STATICLIB 
 endif
 
-CONFIG_FLAGS += \
-  -I../../openssl-1.0.0f/include/openssl \
-  -I../../openssl-1.0.0f/ \
-  -I../../openssl-1.0.0f/ssl \
-  -I../../openssl-1.0.0f/crypto \
-  -I../../openssl-1.0.0f/crypto/asn1 \
-  -I../../openssl-1.0.0f/crypto/evp \
-  -I../../openssl-1.0.0f/MacOS \
-  -I../../openssl-1.0.0f/include \
-
-
+CONFIG_FLAGS += -I../.. -I$(AXTLS)/crypto -I$(AXTLS)/ssl -I$(AXTLS)/config -DUSE_AXTLS=1
 
 libcurl$(SS_LIBEXT):$(CURL_OBJS)
 	$(SS_CREATELIB)$@ $(CURL_OBJS)
