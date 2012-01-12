@@ -177,6 +177,7 @@ ifndef SS_ANDROID
 all: zlib 
 endif
 all: curl 
+all: curl-ssl
 all: png 
 all: jpeg 
 ifndef SS_WEBOS
@@ -250,21 +251,50 @@ endif
 clean::
 	rm -rf $(CURL)
 
+# Not used ....
+# --- CURL-OPEN-SSL ------------------------
+
+CURL_OSSL := open_ssl/curl-7.21.4
+
+OPEN_SSL := openssl-1.0.0f
+
+curl-ossl:$(CURL_OSSL)
+
+$(CURL_OSSL):
+	mkdir -p ossl
+	cd ossl; tar xvzf ../tars/$(CURL).tgz $(TAR_ARGS)
+	cd ossl; tar xvzf ../tars/$(OPEN_SSL).tgz $(TAR_ARGS)
+	cp configs/curl-openssl-makefile $(CURL_OSSL)/lib/Makefile
+	cp configs/curl_config_openssl.gcc $(CURL_OSSL)/lib/curl_config.h
+	cp patches/curl/curlbuild.h $(CURL_OSSL)/include/curl
+	cd $(CURL_OSSL)/lib; make -f Makefile
+	cp $(CURL_OSSL)/lib/libcurl$(SS_LIBEXT) $(LIB_DIR)/libcurl_ssl$(SS_LIBEXT)
+ifdef SS_RANLIB
+	$(SS_RANLIB) $(LIB_DIR)/libcurl_ssl$(SS_LIBEXT)
+endif
+
+clean::
+	rm -rf ossl
+
+
 # --- CURL-SSL ------------------------
 
 CURL_SSL := ssl/curl-7.21.4
 
-OPEN_SSL := openssl-1.0.0f
+AXTLS_SSL := axTLS-1.4.4
 
 curl-ssl:$(CURL_SSL)
 
 $(CURL_SSL):
 	mkdir -p ssl
 	cd ssl; tar xvzf ../tars/$(CURL).tgz $(TAR_ARGS)
-	cd ssl; tar xvzf ../tars/$(OPEN_SSL).tgz $(TAR_ARGS)
+	cd ssl; tar xvzf ../tars/$(AXTLS_SSL).tgz $(TAR_ARGS)
 	cp configs/curl-ssl-makefile $(CURL_SSL)/lib/Makefile
-	cp configs/curl_config_ssl.gcc $(CURL_SSL)/lib/curl_config.h
+	cp configs/curl_config.gcc $(CURL_SSL)/lib/curl_config.h
+	cp configs/axTLS-config ssl/axTLS/config/.config
+	cp configs/axTLS-config.h ssl/axTLS/config/config.h
 	cp patches/curl/curlbuild.h $(CURL_SSL)/include/curl
+	cp ssl/axTLS/ssl/ssl.h ssl/axTLS
 	cd $(CURL_SSL)/lib; make -f Makefile
 	cp $(CURL_SSL)/lib/libcurl$(SS_LIBEXT) $(LIB_DIR)/libcurl_ssl$(SS_LIBEXT)
 ifdef SS_RANLIB
@@ -273,6 +303,7 @@ endif
 
 clean::
 	rm -rf ssl
+
 
 
 
