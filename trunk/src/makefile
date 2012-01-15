@@ -1,4 +1,6 @@
-.PHONY: clean print zlib jpeg ogg vorbis freetype sdl sdl_ttf sdl_image sdl_mixer always curl curl-ssl
+.PHONY: clean print zlib jpeg ogg vorbis freetype sdl sdl_ttf sdl_image sdl_mixer always curl curl-ssl default
+
+default:all
 
 ifeq ("$(OS)","")
 OS := $(OSTYPE)
@@ -33,14 +35,16 @@ endif
 
 ifeq ("$(OS)","webos")
 
-  ifeq ("$(PalmPDK)","PalmPDK")
-     PalmPDK := "/opt/PalmPDK"
+  ifeq ("$(PalmPDK)","")
+     PalmPDK := /opt/PalmPDK
   endif
 
   PATH := $(PalmPDK)/arm-gcc/bin:$(PATH)
 
+
   SS_WEBOS := 1
   export SS_WEBOS
+  export PATH
   SS_CONFIG := webos
   LIB_DIR := ../lib/webOS
   #JCONFIG := jconfig.mac
@@ -199,7 +203,7 @@ endif
 endif
 endif
 
-print:
+print::
 	@echo "OS: " $(OS)
 
 # --- ZLIB ------------------------
@@ -295,6 +299,10 @@ $(CURL_SSL):
 	cp configs/axTLS-config.h ssl/axTLS/config/config.h
 	cp patches/curl/curlbuild.h $(CURL_SSL)/include/curl
 	cp patches/curl/crypto_misc.c ssl/axTLS/crypto
+ifdef SS_WEBOS
+	cp patches/zlib.h ssl/axTLS/ssl
+	cp patches/zconf.h ssl/axTLS/ssl
+endif
 	cp ssl/axTLS/ssl/ssl.h ssl/axTLS
 	cd $(CURL_SSL)/lib; make -f Makefile
 	cp $(CURL_SSL)/lib/libcurl$(SS_LIBEXT) $(LIB_DIR)/libcurl_ssl$(SS_LIBEXT)
