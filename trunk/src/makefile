@@ -294,6 +294,7 @@ $(CURL_SSL):
 	cp configs/axTLS-config ssl/axTLS/config/.config
 	cp configs/axTLS-config.h ssl/axTLS/config/config.h
 	cp patches/curl/curlbuild.h $(CURL_SSL)/include/curl
+	cp patches/curl/crypto_misc.c ssl/axTLS/crypto
 	cp ssl/axTLS/ssl/ssl.h ssl/axTLS
 	cd $(CURL_SSL)/lib; make -f Makefile
 	cp $(CURL_SSL)/lib/libcurl$(SS_LIBEXT) $(LIB_DIR)/libcurl_ssl$(SS_LIBEXT)
