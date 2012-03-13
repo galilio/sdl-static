@@ -30,7 +30,9 @@ ifeq ("$(OS)","darwin")
   LIB_DIR := ../lib/Mac
   JCONFIG := jconfig.mac
   SS_DLLEXT := .dylib
-  SS_CC := gcc -O2 -mmacosx-version-min=10.5 -isysroot /Developer/SDKs/MacOSX10.5.sdk
+  MACOSX_DEPLOYMENT_TARGET:=10.5
+  export MACOSX_DEPLOYMENT_TARGET
+  SS_CC := gcc -O2
 endif
 
 ifeq ("$(OS)","webos")
@@ -88,9 +90,23 @@ endif
 
 
 
+ifeq ("$(wildcard /Applications/Xcode.app/*)","")
+  XCODE_DEVELOPER :=  /Applications/Xcode.app/Contents/Developer
+else
+  XCODE_DEVELOPER :=  /Developer
+endif
+
+IPHONE_VER := 5.1
+
+IPHONE_ARCH := armv6
+ifeq ("$(ARM)","v7")
+   IPHONE_ARCH := armv7
+   ARCH_EXT := -v7
+endif
+
 ifeq ("$(OS)","iphoneos")
   SS_IPHONEOS := 1
-  SS_LIBEXT := .iphoneos.a
+  SS_LIBEXT := .iphoneos$(ARCH_EXT).a
   export SS_IPHONEOS
   export SS_IPHONE
   JCONFIG := jconfig.mac
@@ -99,16 +115,16 @@ ifeq ("$(OS)","iphoneos")
   LIB_DIR := ../lib/iPhone
   SDL_INC := ../include/SDL12
   SDL := ERROR
-  IPHONE_VER := 4.2
-  SS_CC := /Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/gcc  \
+  SS_CC := $(XCODE_DEVELOPER)/Platforms/iPhoneOS.platform/Developer/usr/bin/gcc  \
       -DIPHONE=1 -D__IPHONEOS__=1 -O2 \
       -I../../include/SDL12 -DSDL12 \
-      -arch armv6 -fmessage-length=0 -pipe -Wno-trigraphs -fpascal-strings \
+      -arch $(IPHONE_ARCH) -fmessage-length=0 -pipe -Wno-trigraphs -fpascal-strings \
       -Wreturn-type -Wunused-variable -fno-stack-protector  \
-       -I/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS$(IPHONE_VER).sdk/usr/include/ \
-      -isysroot /Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS$(IPHONE_VER).sdk \
+       -I$(XCODE_DEVELOPER)/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS$(IPHONE_VER).sdk/usr/include/ \
+      -isysroot $(XCODE_DEVELOPER)/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS$(IPHONE_VER).sdk \
 
 endif
+
 
 ifeq ("$(OS)","iphonesim")
   SS_IPHONESIM := 1
@@ -121,14 +137,13 @@ ifeq ("$(OS)","iphonesim")
   SDL_INC := ../include/SDL12
   SDL := ERROR
   SS_IPHONE := 1
-  IPHONE_VER := 4.2
-  SS_CC := /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/gcc  \
+  SS_CC := $(XCODE_DEVELOPER)/Platforms/iPhoneSimulator.platform/Developer/usr/bin/gcc  \
       -DIPHONE=1 -D__IPHONESIM__=1 -O2 \
       -I../../include/SDL12 -DSDL12 \
       -arch i386 -fmessage-length=0 -pipe -Wno-trigraphs -fpascal-strings \
       -Wreturn-type -Wunused-variable  -fno-stack-protector \
-       -I/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneOS$(IPHONE_VER).sdk/usr/include/ \
-      -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator$(IPHONE_VER).sdk \
+       -I$(XCODE_DEVELOPER)/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneOS$(IPHONE_VER).sdk/usr/include/ \
+      -isysroot $(XCODE_DEVELOPER)/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator$(IPHONE_VER).sdk \
 
 endif
 
