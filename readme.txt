@@ -43,6 +43,8 @@ set BLACKBERRY_NDK_ROOT=C:\Development\BlackBerry\bbndk-2.0.0
 call %BLACKBERRY_NDK_ROOT%\bbndk-env.bat
 set OS=blackberry
 
+cd src
+
 make clean
 make
 
