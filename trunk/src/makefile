@@ -91,9 +91,9 @@ endif
 
 
 ifeq ("$(wildcard /Applications/Xcode.app/*)","")
-  XCODE_DEVELOPER :=  /Applications/Xcode.app/Contents/Developer
-else
   XCODE_DEVELOPER :=  /Developer
+else
+  XCODE_DEVELOPER :=  /Applications/Xcode.app/Contents/Developer
 endif
 
 IPHONE_VER := 5.1
