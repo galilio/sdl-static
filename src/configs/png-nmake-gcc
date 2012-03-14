@@ -14,6 +14,11 @@ AR_RC = ar rcs
 RANLIB = ranlib
 RM_F = rm -f
 
+ifdef SS_BLACKBERRY
+	AR_RC = arm-unknown-nto-qnx6.5.0eabi-ar rcs
+	RANLIB = arm-unknown-nto-qnx6.5.0-ranlib
+endif
+
 CDEBUG = -g -DPNG_DEBUG=5
 LDDEBUG =
 CRELEASE = -O2
