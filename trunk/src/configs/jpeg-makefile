@@ -72,6 +72,12 @@ INSTALL_DATA= ${INSTALL} -m 644
 # End of configurable options.
 
 
+ifdef SS_BLACKBERRY
+	AR = arm-unknown-nto-qnx6.5.0eabi-ar rcs
+	AR2 = arm-unknown-nto-qnx6.5.0-ranlib
+endif
+
+
 # source files: JPEG library proper
 LIBSOURCES= jcapimin.c jcapistd.c jccoefct.c jccolor.c jcdctmgr.c jchuff.c \
         jcinit.c jcmainct.c jcmarker.c jcmaster.c jcomapi.c jcparam.c \

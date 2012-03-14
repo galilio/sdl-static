@@ -57,6 +57,32 @@ ifeq ("$(OS)","webos")
 endif
 
 
+ifeq ("$(OS)","blackberry")
+
+ifeq ("x$(BLACKBERRY_NDK_ROOT)","x")
+default:
+	@echo "Please set BLACKBERRY_NDK_ROOT"
+endif
+
+  #QNX_HOST := ${BLACKBERRY_NDK_ROOT}/host/win32/x86
+  #QNX_TARGET := ${BLACKBERRY_NDK_ROOT}/target/qnx6
+
+  #PATH := ${QNX_HOST}/usr/bin/:$(PATH)
+
+
+  SS_BLACKBERRY := 1
+  export SS_BLACKBERRY
+  SS_CONFIG := blackberry
+  LIB_DIR := ../lib/BlackBerry
+  #JCONFIG := jconfig.mac
+  SS_DLLEXT := .so
+  #SDL := ERROR
+  SS_CC :=  arm-unknown-nto-qnx6.5.0eabi-gcc "-I${QNX_TARGET}/usr/include" -DBLACKBERRY -fpic -fPIC -O2 -fvisibility=hidden
+  SS_RANLIB := arm-unknown-nto-qnx6.5.0-ranlib
+  SS_CREATELIB := arm-unknown-nto-qnx6.5.0eabi-ar -cr$(SPACE)
+endif
+
+
 ifeq ("$(OS)","android")
 
 ifeq ("x$(ANDROID_NDK_ROOT)","x")
@@ -450,6 +476,7 @@ SMPEG := smpeg
 $(SMPEG):
 	tar xvzf tars/$(SMPEG).tgz $(TAR_ARGS)
 	cp configs/smpeg-makefile $(SMPEG)/Makefile
+	cp configs/smpeg-video.h $(SMPEG)/video/video.h
 	cp patches/smpeg/mpeglayer3.cpp $(SMPEG)/audio
 	cd $(SMPEG); make
 	cp $(SMPEG)/libsmpeg$(SS_LIBEXT) $(LIB_DIR)
