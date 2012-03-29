@@ -73,8 +73,13 @@ INSTALL_DATA= ${INSTALL} -m 644
 
 
 ifdef SS_BLACKBERRY
+ifdef SS_ARCH_X86
+	AR = i486-pc-nto-qnx6.5.0-ar rcs
+	AR2 = i486-pc-nto-qnx6.5.0-ranlib
+else
 	AR = arm-unknown-nto-qnx6.5.0eabi-ar rcs
 	AR2 = arm-unknown-nto-qnx6.5.0-ranlib
+endif
 endif
 
 

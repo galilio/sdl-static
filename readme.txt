@@ -49,5 +49,9 @@ make clean
 make
 
 
+If you would like to build for the simulator instead of a device, you can
+also set ARCH to x86.
+
+
 
 (Details for other platforms will be added in the future)
