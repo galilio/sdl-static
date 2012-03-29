@@ -69,17 +69,34 @@ endif
 
   #PATH := ${QNX_HOST}/usr/bin/:$(PATH)
 
-
   SS_BLACKBERRY := 1
   export SS_BLACKBERRY
-  SS_CONFIG := blackberry
-  LIB_DIR := ../lib/BlackBerry
-  #JCONFIG := jconfig.mac
+  
+ifeq ("$(ARCH)","x86")
+
+  SS_ARCH_X86 := 1
+  export SS_ARCH_X86
+  
+  SS_LIBEXT := -x86.a
+  SS_DLLEXT := -x86.so
+  SS_CC :=  i486-pc-nto-qnx6.5.0-gcc "-I${QNX_TARGET}/usr/include" -DBLACKBERRY -fpic -fPIC -O2 -fvisibility=hidden
+  SS_RANLIB := i486-pc-nto-qnx6.5.0-ranlib
+  SS_CREATELIB := i486-pc-nto-qnx6.5.0-ar -cr$(SPACE)
+  
+else
+
   SS_DLLEXT := .so
-  #SDL := ERROR
   SS_CC :=  arm-unknown-nto-qnx6.5.0eabi-gcc "-I${QNX_TARGET}/usr/include" -DBLACKBERRY -fpic -fPIC -O2 -fvisibility=hidden
   SS_RANLIB := arm-unknown-nto-qnx6.5.0-ranlib
   SS_CREATELIB := arm-unknown-nto-qnx6.5.0eabi-ar -cr$(SPACE)
+
+endif
+  
+  SS_CONFIG := blackberry
+  LIB_DIR := ../lib/BlackBerry
+  #JCONFIG := jconfig.mac
+  #SDL := ERROR
+  
 endif
 
 

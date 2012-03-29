@@ -15,8 +15,13 @@ RANLIB = ranlib
 RM_F = rm -f
 
 ifdef SS_BLACKBERRY
+ifdef SS_ARCH_X86
+	AR_RC = i486-pc-nto-qnx6.5.0-ar rcs
+	RANLIB = i486-pc-nto-qnx6.5.0-ranlib
+else
 	AR_RC = arm-unknown-nto-qnx6.5.0eabi-ar rcs
 	RANLIB = arm-unknown-nto-qnx6.5.0-ranlib
+endif
 endif
 
 CDEBUG = -g -DPNG_DEBUG=5
