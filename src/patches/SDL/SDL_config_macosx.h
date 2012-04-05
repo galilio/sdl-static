@@ -142,7 +142,8 @@
 #define SDL_VIDEO_DISABLE_SCREENSAVER	1
 
 /* Enable assembly routines */
-#define SDL_ASSEMBLY_ROUTINES	1
+/*#define SDL_ASSEMBLY_ROUTINES	1*/
+#undef SDL_ASSEMBLY_ROUTINES
 #ifdef __ppc__
 #define SDL_ALTIVEC_BLITTERS	1
 #endif
