@@ -5,6 +5,7 @@ default:all
 ifeq ("$(OS)","")
 OS := $(OSTYPE)
 endif
+OS := $(OS:mac%=darwin)
 OS := $(OS:darwin%=darwin)
 OS := $(OS:linux%=linux)
 OS := $(OS:Linux%=linux)
