@@ -54,4 +54,34 @@ also set ARCH to x86.
 
 
 
+Windows
+
+
+You must have Visual Studio C++ installed. You also need a version of "make"
+available in your PATH.
+
+With Visual Studio installed, there will be a "Visual Studio Command Prompt"
+entry in the Start Menu. This will create a command-prompt which includes all
+the paths and environment for compiling with VSC++ with a command-prompt.
+You can also open a normal command-prompt and run the MSVC.bat file that
+comes with most copies of Visual Studio.
+
+Although there are other choices, if you're set up to compile for BlackBerry, it
+already includes a Windows version of make, which should be easy to link to.
+
+While running the Visual Studio Command Prompt, add the directory where
+make is located to your path, like this:
+
+
+path=$PATH$;D:\Development\BlackBerry\bbndk-2.0.0\host\win32\x86\usr\bin
+
+
+Then it should be simple to build:
+
+
+cd src
+make
+
+
+
 (Details for other platforms will be added in the future)
