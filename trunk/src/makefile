@@ -11,6 +11,10 @@ OS := $(OS:linux%=linux)
 OS := $(OS:Linux%=linux)
 OS := $(OS:Windows%=windows)
 
+ifeq ("$(OS)","")
+OS := linux
+endif
+
 TAR_ARGS := --no-same-owner
 
 SS_LIBEXT := .a
@@ -277,6 +281,7 @@ ifdef SS_WINDOWS
 	cd $(ZLIB); unset MAKEFLAGS; nmake -f win32/Makefile.msc
 	cp $(ZLIB)/zlib$(SS_LIBEXT) $(LIB_DIR)/libz$(SS_LIBEXT)
 else
+	@echo $(OS)
 	cp configs/zlib-makefile $(ZLIB)/Makefile
 	cd $(ZLIB); make
 	cp $(ZLIB)/libz$(SS_LIBEXT) $(LIB_DIR)
@@ -484,6 +489,8 @@ endif
 
 clean::
 	rm -rf $(FREETYPE)
+	rm -rf ._$(FREETYPE)
+	
 
 # --- SMPEG ------------------------
 
@@ -523,6 +530,8 @@ $(SDL):
 	cp patches/SDL/SDL_config_macosx.h $(SDL)/include
 	cp patches/SDL/SDL_config_linux.h $(SDL)/include
 	cp patches/SDL/SDL_QuartzVideo.m $(SDL)/src/video/quartz
+	cp patches/SDL/SDL_x11sym.h $(SDL)/src/video/x11
+	cp patches/SDL/SDL_x11dyn.c $(SDL)/src/video/x11
 	cd $(SDL); make
 	cp $(SDL)/libSDL$(SS_LIBEXT) $(LIB_DIR)
 ifdef SS_WINDOWS
