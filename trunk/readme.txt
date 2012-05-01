@@ -84,4 +84,23 @@ make
 
 
 
+Linux
+
+
+To compile for 32-bit, use "make" normally:
+
+
+cd src
+make
+
+
+To compile for 64-bit, clean the directory then define SS_64:
+
+
+make clean
+SS_64=1 make
+
+
+
+
 (Details for other platforms will be added in the future)
