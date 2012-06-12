@@ -367,6 +367,10 @@ ifdef SS_WEBOS
 	cp patches/zlib.h ssl/axTLS/ssl
 	cp patches/zconf.h ssl/axTLS/ssl
 endif
+ifdef SS_LINUX
+	cp patches/zlib.h ssl/axTLS/ssl
+	cp patches/zconf.h ssl/axTLS/ssl
+endif
 	cp ssl/axTLS/ssl/ssl.h ssl/axTLS
 	cd $(CURL_SSL)/lib; make -f Makefile
 	cp $(CURL_SSL)/lib/libcurl$(SS_LIBEXT) $(LIB_DIR)/libcurl_ssl$(SS_LIBEXT)
