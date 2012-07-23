@@ -367,6 +367,10 @@ ifdef SS_WEBOS
 	cp patches/zlib.h ssl/axTLS/ssl
 	cp patches/zconf.h ssl/axTLS/ssl
 endif
+ifdef SS_BLACKBERRY
+	cp patches/zlib.h ssl/axTLS/ssl
+	cp patches/zconf.h ssl/axTLS/ssl
+endif
 ifdef SS_LINUX
 	cp patches/zlib.h ssl/axTLS/ssl
 	cp patches/zconf.h ssl/axTLS/ssl

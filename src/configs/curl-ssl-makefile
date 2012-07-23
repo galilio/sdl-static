@@ -135,6 +135,11 @@ else
 CONFIG_FLAGS += -DHAVE_CONFIG_H -DCURL_STATICLIB 
 endif
 
+ifdef SS_BLACKBERRY
+CONFIG_FLAGS += -DFD_SETSIZE=64
+endif
+
+
 CONFIG_FLAGS += -I../.. -I$(AXTLS)/crypto -I$(AXTLS)/ssl -I$(AXTLS)/config -DUSE_AXTLS=1
 
 libcurl$(SS_LIBEXT):$(CURL_OBJS)
