@@ -217,10 +217,15 @@ ifeq ("$(OS)","windows")
   SS_WINDOWS := 1
   export SS_WINDOWS
   SS_CONFIG := windows
-  LIB_DIR := ../lib/Windows
-  SS_LIBEXT := .lib
+  ifdef SS_WINRT
+   LIB_DIR := ../lib/WinRTx86
+   SS_CC := cl.exe -nologo -ZW -DWINAPI_FAMILY=WINAPI_FAMILY_APP /WX- /fp:precise -Z7 -O2 -DWINRT
+  else
+   LIB_DIR := ../lib/Windows
+   SS_CC := cl.exe -nologo -MT -Z7 -O2 -DWIN32
+  endif
+  SS_LIBEXT := .libf
   JCONFIG := jconfig.vc
-  SS_CC := cl.exe -nologo -MT -Z7 -O2 -DWIN32
   SS_OBJEXT := .obj
   SS_OBJOUT := -Fo
   SS_CREATELIB := lib -out:
