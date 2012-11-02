@@ -73,7 +73,7 @@ While running the Visual Studio Command Prompt, add the directory where
 make is located to your path, like this:
 
 
-path=$PATH$;D:\Development\BlackBerry\bbndk-2.0.0\host\win32\x86\usr\bin
+path=%PATH%;D:\Development\BlackBerry\bbndk-2.0.0\host\win32\x86\usr\bin
 
 
 Then it should be simple to build:
@@ -81,6 +81,14 @@ Then it should be simple to build:
 
 cd src
 make
+
+
+To compile for WinRT, clean the directory then define SS_WINRT:
+
+
+make clean
+make SS_WINRT=1 
+
 
 
 

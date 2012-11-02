@@ -21,17 +21,29 @@ LOC =
 STATICLIB = zlib.lib
 SHAREDLIB = zlib1.dll
 IMPLIB    = zdll.lib
-
 CC = cl
 AS = ml
 LD = link
 AR = lib
 RC = rc
+
+!IFDEF SS_WINRT
+
+CFLAGS  = -nologo -ZW -DWINAPI_FAMILY=WINAPI_FAMILY_APP /WX- /fp:precise -O2 $(LOC)
+ASFLAGS = -coff
+LDFLAGS = -nologo -release
+ARFLAGS = -nologo
+RCFLAGS = /dWIN32 /r
+
+!ELSE
+
 CFLAGS  = -nologo -MT -O2 $(LOC)
 ASFLAGS = -coff
 LDFLAGS = -nologo -release
 ARFLAGS = -nologo
 RCFLAGS = /dWIN32 /r
+
+!ENDIF
 
 OBJS = adler32.obj compress.obj crc32.obj deflate.obj gzio.obj infback.obj \
        inffast.obj inflate.obj inftrees.obj trees.obj uncompr.obj zutil.obj
