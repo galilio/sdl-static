@@ -29,7 +29,7 @@ RC = rc
 
 !IFDEF SS_WINRT
 
-CFLAGS  = -nologo -ZW -DWINAPI_FAMILY=WINAPI_FAMILY_APP /WX- /fp:precise -O2 $(LOC)
+CFLAGS  = -nologo -MT -DWINAPI_FAMILY=WINAPI_FAMILY_APP /WX- /fp:precise -O2 $(LOC)
 ASFLAGS = -coff
 LDFLAGS = -nologo -release
 ARFLAGS = -nologo
