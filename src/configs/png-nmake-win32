@@ -14,7 +14,7 @@ AR = lib
 
 !IFDEF SS_WINRT
 
-CFLAGS  = -nologo -DPNG_NO_MMX_CODE -ZW -DWINAPI_FAMILY=WINAPI_FAMILY_APP /WX- /fp:precise -O2 -W3 -I..\..\include
+CFLAGS  = -nologo -DPNG_NO_MMX_CODE -MT -DWINAPI_FAMILY=WINAPI_FAMILY_APP /WX- /fp:precise -O2 -W3 -I..\..\include
 
 !ELSE
 

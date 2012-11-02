@@ -224,7 +224,7 @@ ifeq ("$(OS)","windows")
    LIB_DIR := ../lib/Windows
    SS_CC := cl.exe -nologo -MT -Z7 -O2 -DWIN32
   endif
-  SS_LIBEXT := .libf
+  SS_LIBEXT := .lib
   JCONFIG := jconfig.vc
   SS_OBJEXT := .obj
   SS_OBJOUT := -Fo
