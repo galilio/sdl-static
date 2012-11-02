@@ -219,7 +219,7 @@ ifeq ("$(OS)","windows")
   SS_CONFIG := windows
   ifdef SS_WINRT
    LIB_DIR := ../lib/WinRTx86
-   SS_CC := cl.exe -nologo -ZW -DWINAPI_FAMILY=WINAPI_FAMILY_APP /WX- /fp:precise -Z7 -O2 -DWINRT
+   SS_CC := cl.exe -nologo -MT -DWINAPI_FAMILY=WINAPI_FAMILY_APP /WX- /fp:precise -Z7 -O2 -DWINRT
   else
    LIB_DIR := ../lib/Windows
    SS_CC := cl.exe -nologo -MT -Z7 -O2 -DWIN32
