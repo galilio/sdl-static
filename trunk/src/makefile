@@ -233,6 +233,22 @@ ifeq ("$(OS)","windows")
 endif
 
 
+ifeq ("$(OS)","winrt")
+  SS_WINDOWS := 1
+  export SS_WINDOWS
+  SS_WINRT := 1
+  export SS_WINRT
+  SS_CONFIG := winrt
+  LIB_DIR := ../lib/WinRTx86
+  SS_LIBEXT := .lib
+  JCONFIG := jconfig.vc
+  SS_CC := cl.exe -nologo -Z7 -O2 -DWIN32 -DWINAPI_FAMILY=2 "-Ic:\Program Files (x86)\Windows Kits\8.0\Include\shared" /Zl
+  SS_OBJEXT := .obj
+  SS_OBJOUT := -Fo
+  SS_CREATELIB := lib -out:
+  SS_DLLEXT := .dll
+endif
+
 
 export SS_CONFIG
 export SS_CC
@@ -245,28 +261,40 @@ export SS_CREATEDLL
 export SDL_INC
 
 all: print 
+
 ifndef SS_ANDROID
 all: zlib 
 endif
+
+ifndef SS_WINRT
 all: curl 
 all: curl-ssl
+endif
+
 all: png 
 all: jpeg 
+
 ifndef SS_WEBOS
 ifndef SS_ANDROID
+ifndef SS_WINRT
 all: ogg 
 all: vorbis 
 endif
 endif
+endif
+
 all: freetype 
+
 ifndef SS_IPHONE
 ifndef SS_WEBOS
 ifndef SS_ANDROID
+ifndef SS_WINRT
 all: smpeg 
 all: sdl 
 all: sdl_ttf 
 all: sdl_image 
 all: sdl_mixer
+endif
 endif
 endif
 endif
@@ -402,7 +430,11 @@ png:$(PNG)
 $(PNG):
 	tar xvzf tars/$(PNG).tgz $(TAR_ARGS)
 ifdef SS_WINDOWS
+ifdef SS_WINRT
+	cp configs/png-nmake-winrt $(PNG)/makefile
+else
 	cp configs/png-nmake-win32 $(PNG)/makefile
+endif
 	cd $(PNG); unset MAKEFLAGS; nmake -f makefile
 else
 	cp configs/png-nmake-gcc $(PNG)/makefile
@@ -426,6 +458,9 @@ jpeg:$(JPEG)
 $(JPEG):
 	tar xvzf tars/$(JPEG).tgz $(TAR_ARGS)
 	cp configs/jconfig.h configs/jconfig.mac configs/jconfig.iphoneos  configs/jconfig.vc configs/jconfig.linux $(JPEG)
+ifdef SS_WINRT
+	cp patches/jpeg/makefile.winrt $(JPEG)/makefile.vc
+endif
 ifdef SS_WINDOWS
 	cd $(JPEG); unset MAKEFLAGS; nmake -f makefile.vc nodebug=1
 else
