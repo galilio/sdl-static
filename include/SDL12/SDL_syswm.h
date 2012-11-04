@@ -49,7 +49,7 @@ typedef struct SDL_SysWMinfo SDL_SysWMinfo;
 #else
 
 /* This is the structure for custom window manager events */
-#if defined(SDL_VIDEO_DRIVER_X11)
+#if defined(SDL_VIDEO_DRIVER_X11) && !defined(BLACKBERRY)
 #if defined(__APPLE__) && defined(__MACH__)
 /* conflicts with Quickdraw.h */
 #define Cursor X11Cursor
@@ -179,6 +179,24 @@ struct SDL_SysWMmsg {
 typedef struct SDL_SysWMinfo {
 	SDL_version version;
 	int data;
+} SDL_SysWMinfo;
+
+#elif defined(SDL_VIDEO_DRIVER_PLAYBOOK) || defined(BLACKBERRY)
+#include <screen/screen.h>
+
+struct bps_event_t;
+typedef struct bps_event_t bps_event_t;
+
+/** The PlayBook custom event structure */
+struct SDL_SysWMmsg {
+	SDL_version version;
+	bps_event_t *event;
+};
+
+typedef struct SDL_SysWMinfo {
+	SDL_version version;
+	screen_context_t context;
+	screen_window_t window;
 } SDL_SysWMinfo;
 
 #else
