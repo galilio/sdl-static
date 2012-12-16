@@ -1,6 +1,6 @@
 /*
     SDL - Simple DirectMedia Layer
-    Copyright (C) 1997-2009 Sam Lantinga
+    Copyright (C) 1997-2012 Sam Lantinga
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -116,13 +116,10 @@
 
 /* Enable various video drivers */
 #define SDL_VIDEO_DRIVER_DUMMY	1
-#if ((defined TARGET_API_MAC_CARBON) && (TARGET_API_MAC_CARBON))
-#define SDL_VIDEO_DRIVER_TOOLBOX	1
-#else
+
 #define SDL_VIDEO_DRIVER_QUARTZ	1
-#endif
-#define SDL_VIDEO_DRIVER_DGA 0
-#define SDL_VIDEO_DRIVER_X11 0
+#define SDL_VIDEO_DRIVER_DGA 1
+#define SDL_VIDEO_DRIVER_X11 1
 #define SDL_VIDEO_DRIVER_X11_DGAMOUSE 1
 #define SDL_VIDEO_DRIVER_X11_DYNAMIC "/usr/X11R6/lib/libX11.6.dylib"
 #define SDL_VIDEO_DRIVER_X11_DYNAMIC_XEXT "/usr/X11R6/lib/libXext.6.dylib"
@@ -142,8 +139,7 @@
 #define SDL_VIDEO_DISABLE_SCREENSAVER	1
 
 /* Enable assembly routines */
-/*#define SDL_ASSEMBLY_ROUTINES	1*/
-#undef SDL_ASSEMBLY_ROUTINES
+#define SDL_ASSEMBLY_ROUTINES	1
 #ifdef __ppc__
 #define SDL_ALTIVEC_BLITTERS	1
 #endif

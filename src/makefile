@@ -1,4 +1,4 @@
-.PHONY: clean print zlib jpeg ogg vorbis freetype sdl sdl_ttf sdl_image sdl_mixer always curl curl-ssl default
+.PHONY: clean print zlib jpeg ogg vorbis freetype sdl sdl_ttf sdl_mixer always curl curl-ssl default
 
 default:all
 
@@ -35,9 +35,20 @@ ifeq ("$(OS)","darwin")
   LIB_DIR := ../lib/Mac
   JCONFIG := jconfig.mac
   SS_DLLEXT := .dylib
+
+  # http://xquartz.macosforge.org/landing/
+  # ln -s /opt/X11/include/X11 /usr/local/include/X11
+
   MACOSX_DEPLOYMENT_TARGET:=10.5
   export MACOSX_DEPLOYMENT_TARGET
   SS_CC := gcc -O2
+  ifdef SS_64
+   SS_CC += -fPIC -m64 -D_GNU_SOURCE=1 -DTARGET_API_MAC_CARBON -DTARGET_API_MAC_OSX -I/opt/X11/include
+   LIB_DIR := ../lib/Mac64
+  else
+   SS_CC += -fPIC -m32 -D_GNU_SOURCE=1 -DTARGET_API_MAC_CARBON -DTARGET_API_MAC_OSX -I/opt/X11/include
+  endif
+ 
 endif
 
 ifeq ("$(OS)","webos")
@@ -250,6 +261,8 @@ ifeq ("$(OS)","winrt")
 endif
 
 
+
+
 export SS_CONFIG
 export SS_CC
 export SS_OBJOUT
@@ -292,7 +305,6 @@ ifndef SS_WINRT
 all: smpeg 
 all: sdl 
 all: sdl_ttf 
-all: sdl_image 
 all: sdl_mixer
 endif
 endif
@@ -301,6 +313,7 @@ endif
 
 print::
 	@echo "OS: " $(OS)
+
 
 # --- ZLIB ------------------------
 ZLIB := zlib-1.2.3
@@ -449,6 +462,7 @@ endif
 clean::
 	rm -rf $(PNG)
 
+
 # --- JPEG ------------------------
 
 JPEG := jpeg-6b
@@ -477,9 +491,10 @@ endif
 clean::
 	rm -rf $(JPEG)
 
+
 # --- OGG ------------------------
 
-OGG := libogg-1.1.3
+OGG := libogg-1.3.0
 
 ogg:$(OGG)
 
@@ -500,13 +515,14 @@ clean::
 
 # --- VORBIS ------------------------
 
-VORBIS := libvorbis-1.2.0
+VORBIS := libvorbis-1.3.3
 
 vorbis:$(VORBIS)
 
 $(VORBIS):
 	tar xvzf tars/$(VORBIS).tgz $(TAR_ARGS)
 	cp configs/vorbis-makefile $(VORBIS)/Makefile
+	cp patches/vorbis/os.h $(VORBIS)/lib
 	cd $(VORBIS); make
 	cp $(VORBIS)/libvorbis$(SS_LIBEXT) $(LIB_DIR)
 	mkdir -p ../include/vorbis
@@ -564,22 +580,20 @@ clean::
 # --- SDL ------------------------
 
 ifndef SS_IPHONE
-SDL := SDL-1.2.14
+SDL := SDL-1.2.15
 SDL_INC := ../include/SDL12
 
 sdl:$(SDL)
 
 $(SDL):
 	tar xzf tars/$(SDL).tgz $(TAR_ARGS)
+	cp patches/SDL/SDL_config_macosx.h $(SDL)/include
+	cp patches/SDL/SDL_config_linux.h $(SDL)/include
+	cp patches/SDL/SDL_video.h $(SDL)/include
+	cp patches/SDL/SDL_QuartzVideo-2.15.m $(SDL)/src/video/quartz/SDL_QuartzVideo.m
 	mkdir -p $(SDL_INC)
 	cp configs/sdl-makefile $(SDL)/Makefile
 	cp patches/SDL/SDL_config.h $(SDL)/include
-	cp patches/SDL/SDL_video.h $(SDL)/include
-	cp patches/SDL/SDL_config_macosx.h $(SDL)/include
-	cp patches/SDL/SDL_config_linux.h $(SDL)/include
-	cp patches/SDL/SDL_QuartzVideo.m $(SDL)/src/video/quartz
-	cp patches/SDL/SDL_x11sym.h $(SDL)/src/video/x11
-	cp patches/SDL/SDL_x11dyn.c $(SDL)/src/video/x11
 	cd $(SDL); make
 	cp $(SDL)/libSDL$(SS_LIBEXT) $(LIB_DIR)
 ifdef SS_WINDOWS
@@ -611,33 +625,40 @@ clean::
 
 # --- SDL_IMAGE ------------------------
 
-SDL_IMAGE := SDL_image-1.2.7
+# SDL image is not required for NME
+#SDL_IMAGE := SDL_image-1.2.7
 
-sdl_image:$(SDL_IMAGE)
+#sdl_image:$(SDL_IMAGE)
 
-$(SDL_IMAGE):
-	tar xvzf tars/$(SDL_IMAGE).tgz $(TAR_ARGS)
-	cp configs/sdl_image-makefile $(SDL_IMAGE)/Makefile
-	cd $(SDL_IMAGE); make
-	cp $(SDL_IMAGE)/libSDL_image$(SS_LIBEXT) $(LIB_DIR)
-	cp $(SDL_IMAGE)/SDL_image.h ../include
-
-clean::
-	rm -rf $(SDL_IMAGE)
+#$(SDL_IMAGE):
+	#tar xvzf tars/$(SDL_IMAGE).tgz $(TAR_ARGS)
+	#cp configs/sdl_image-makefile $(SDL_IMAGE)/Makefile
+	#cd $(SDL_IMAGE); make
+	#cp $(SDL_IMAGE)/libSDL_image$(SS_LIBEXT) $(LIB_DIR)
+	#cp $(SDL_IMAGE)/SDL_image.h ../include
+#
+#clean::
+	#rm -rf $(SDL_IMAGE)
 
 
 # --- SDL_MIXER ------------------------
 
-SDL_MIXER := SDL_mixer-1.2.8
+SDL_MIXER := SDL_mixer-1.2.12
+MIKMOD := libmikmod-3.1.12
+export MIKMOD
 
 sdl_mixer:$(SDL_MIXER)
 
 $(SDL_MIXER):
 	tar xvzf tars/$(SDL_MIXER).tgz $(TAR_ARGS)
+	cd $(SDL_MIXER); unzip $(MIKMOD).zip
+	cp $(SDL_MIXER)/$(MIKMOD).patched/macosx/mikmod.h $(SDL_MIXER)/$(MIKMOD).patched/include
+	cp $(SDL_MIXER)/$(MIKMOD).patched/macosx/mikmod_build.h $(SDL_MIXER)/$(MIKMOD).patched/include
+ifdef SS_MAC
+	cp configs/sdl_mixer-config-osx $(SDL_MIXER)/$(MIKMOD).patched/include/config.h
+	cp configs/sdl_mixer-config-osx $(SDL_MIXER)/$(MIKMOD).patched/macosx/config.h
+endif
 	cp configs/sdl_mixer-makefile $(SDL_MIXER)/Makefile
-	cp patches/SDL_mixer/mixer.c $(SDL_MIXER)
-	cp patches/SDL_mixer/SDL_mixer.h $(SDL_MIXER)
-	cp patches/SDL_mixer/native_midi_common.c $(SDL_MIXER)/native_midi
 	cd $(SDL_MIXER); make
 	cp $(SDL_MIXER)/libSDL_mixer$(SS_LIBEXT) $(LIB_DIR)
 	cp $(SDL_MIXER)/SDL_mixer.h ../include

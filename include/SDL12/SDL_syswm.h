@@ -1,6 +1,6 @@
 /*
     SDL - Simple DirectMedia Layer
-    Copyright (C) 1997-2009 Sam Lantinga
+    Copyright (C) 1997-2012 Sam Lantinga
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -49,7 +49,7 @@ typedef struct SDL_SysWMinfo SDL_SysWMinfo;
 #else
 
 /* This is the structure for custom window manager events */
-#if defined(SDL_VIDEO_DRIVER_X11) && !defined(BLACKBERRY)
+#if defined(SDL_VIDEO_DRIVER_X11)
 #if defined(__APPLE__) && defined(__MACH__)
 /* conflicts with Quickdraw.h */
 #define Cursor X11Cursor
@@ -181,24 +181,6 @@ typedef struct SDL_SysWMinfo {
 	int data;
 } SDL_SysWMinfo;
 
-#elif defined(SDL_VIDEO_DRIVER_PLAYBOOK) || defined(BLACKBERRY)
-#include <screen/screen.h>
-
-struct bps_event_t;
-typedef struct bps_event_t bps_event_t;
-
-/** The PlayBook custom event structure */
-struct SDL_SysWMmsg {
-	SDL_version version;
-	bps_event_t *event;
-};
-
-typedef struct SDL_SysWMinfo {
-	SDL_version version;
-	screen_context_t context;
-	screen_window_t window;
-} SDL_SysWMinfo;
-
 #else
 
 /** The generic custom event structure */
@@ -221,12 +203,13 @@ typedef struct SDL_SysWMinfo {
 /**
  * This function gives you custom hooks into the window manager information.
  * It fills the structure pointed to by 'info' with custom information and
- * returns 1 if the function is implemented.  If it's not implemented, or
- * the version member of the 'info' structure is invalid, it returns 0. 
+ * returns 0 if the function is not implemented, 1 if the function is 
+ * implemented and no error occurred, and -1 if the version member of
+ * the 'info' structure is not filled in or not supported.
  *
  * You typically use this function like this:
  * @code
- * SDL_SysWMInfo info;
+ * SDL_SysWMinfo info;
  * SDL_VERSION(&info.version);
  * if ( SDL_GetWMInfo(&info) ) { ... }
  * @endcode

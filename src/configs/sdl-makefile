@@ -257,10 +257,14 @@ endif
 
 ifdef SS_MAC
 SOURCES_UNIX += \
-                $(wildcard src/video/quartz/*.m) \
-                $(wildcard src/video/maccommon/*.c) \
-                $(wildcard src/video/macdsp/*.c) \
-                $(wildcard src/video/macrom/*/*.c) \
+           $(wildcard src/video/quartz/*.m) \
+           $(wildcard src/video/x11/*.c) \
+           $(wildcard src/video/dga/*.c) \
+           $(wildcard src/video/Xext/Xxf86dga/*.c) \
+           $(wildcard src/video/Xext/Xxf86vm/*.c) \
+           $(wildcard src/video/Xext/Xv/*.c) \
+           $(wildcard src/video/Xext/Xinerama/*.c) \
+           $(wildcard src/video/Xext/XME/*.c) \
 	        $(wildcard src/audio/macosx/*.c) \
 	        $(wildcard src/audio/macrom/*.c) \
 	        $(wildcard src/audio/disk/*.c) \

@@ -5,6 +5,8 @@ SOURCE := \
    ./effect_stereoreverse.c \
    music_ogg.c \
    dynamic_ogg.c \
+   dynamic_mod.c \
+   music_mod.c \
    load_ogg.c \
    ./effects_internal.c \
    ./load_aiff.c \
@@ -14,11 +16,18 @@ SOURCE := \
    ./music_cmd.c \
    ./wavestream.c \
    ./dynamic_mp3.c \
-   $(wildcard mikmod/*.c) \
+   $(MIKMOD).patched/drivers/drv_wav.c \
+   $(MIKMOD).patched/drivers/drv_nos.c \
+   $(wildcard $(MIKMOD).patched/playercode/*.c) \
+   $(wildcard $(MIKMOD).patched/loaders/*.c) \
+   $(wildcard $(MIKMOD).patched/mmio/*.c) \
+   $(wildcard $(MIKMOD).patched/win32/*.c) \
+   $(wildcard $(MIKMOD).patched/posix/*.c) \
    $(wildcard ./timidity/*.c) \
    $(wildcard ./native_midi/*.c)
 
 
+  #$(wildcard $(MIKMOD).patched/loaders/*.c) \
 
 OBJS := $(SOURCE:%.c=%$(SS_OBJEXT))
 
@@ -47,7 +56,7 @@ CONFIG := \
 	-D__STDC__
 
 %$(SS_OBJEXT):%.c
-	$(SS_CC) $(CONFIG) -I../../include -Inative_midi -I../$(SDL_INC) $< -c $(SS_OBJOUT)$@
+	$(SS_CC) $(CONFIG) -I../../include -Inative_midi -I../$(SDL_INC) -I$(MIKMOD).patched/include $< -c $(SS_OBJOUT)$@
 
 
 clean:
