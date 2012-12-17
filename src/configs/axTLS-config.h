@@ -110,7 +110,17 @@
 /*
  * BigInt Options
  */
+#ifndef WIN32
 #include <stdint.h>
+#else
+typedef unsigned int uint32_t;
+typedef unsigned __int64 uint64_t;
+typedef __int64 int64_t;
+typedef unsigned char uint8_t;
+typedef signed char int8_t;
+typedef unsigned short uint16_t;
+typedef signed short int16_t;
+#endif
 
 #undef CONFIG_BIGINT_CLASSICAL
 #undef CONFIG_BIGINT_MONTGOMERY

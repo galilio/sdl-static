@@ -21,10 +21,14 @@ SOURCE := \
    $(wildcard $(MIKMOD).patched/playercode/*.c) \
    $(wildcard $(MIKMOD).patched/loaders/*.c) \
    $(wildcard $(MIKMOD).patched/mmio/*.c) \
-   $(wildcard $(MIKMOD).patched/win32/*.c) \
-   $(wildcard $(MIKMOD).patched/posix/*.c) \
    $(wildcard ./timidity/*.c) \
    $(wildcard ./native_midi/*.c)
+
+ifdef SS_WINDOWS
+   SOURCE += $(wildcard $(MIKMOD).patched/win32/*.c)
+else
+   SOURCE += $(wildcard $(MIKMOD).patched/posix/*.c)
+endif
 
 
   #$(wildcard $(MIKMOD).patched/loaders/*.c) \
@@ -48,7 +52,6 @@ CONFIG := \
    -DOGG_MUSIC \
 	-DHAVE_LIBC=1 \
 	-DMID_MUSIC \
-	-DCMD_MUSIC \
 	-DWAV_MUSIC \
 	 $(MIDI_FILES) \
 	-DMOD_MUSIC \
