@@ -27,7 +27,7 @@ SOURCE := \
 ifdef SS_WINDOWS
    SOURCE += $(wildcard $(MIKMOD).patched/win32/*.c)
 else
-   SOURCE += $(wildcard $(MIKMOD).patched/posix/*.c)
+   #SOURCE += $(wildcard $(MIKMOD).patched/posix/*.c)
 endif
 
 

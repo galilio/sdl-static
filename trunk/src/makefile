@@ -654,7 +654,6 @@ $(SDL_MIXER):
 	cd $(SDL_MIXER); unzip $(MIKMOD).zip
 	cp $(SDL_MIXER)/$(MIKMOD).patched/macosx/mikmod.h $(SDL_MIXER)/$(MIKMOD).patched/include
 	cp $(SDL_MIXER)/$(MIKMOD).patched/macosx/mikmod_build.h $(SDL_MIXER)/$(MIKMOD).patched/include
-	cp patches/SDL_mixer/music_cmd.h $(SDL_MIXER)
 ifdef SS_MAC
 	cp configs/sdl_mixer-config-osx $(SDL_MIXER)/$(MIKMOD).patched/include/config.h
 	cp configs/sdl_mixer-config-osx $(SDL_MIXER)/$(MIKMOD).patched/macosx/config.h
