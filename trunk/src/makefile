@@ -155,7 +155,7 @@ else
   XCODE_DEVELOPER :=  /Applications/Xcode.app/Contents/Developer
 endif
 
-IPHONE_VER := 5.1
+IPHONE_VER := 6.0
 
 IPHONE_ARCH := armv6
 ifeq ("$(ARM)","v7")
