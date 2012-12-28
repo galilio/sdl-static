@@ -602,6 +602,7 @@ ifdef SS_WINDOWS
 else
 	cp $(SDL)/include/*.h $(SDL_INC)
 endif
+	cp patches/SDL/SDL_syswm.h $(SDL_INC)
 
 clean::
 	rm -rf $(SDL)
