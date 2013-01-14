@@ -206,17 +206,22 @@ ifeq ("$(OS)","iphonesim")
 
 endif
 
-
 ifeq ("$(OS)","linux")
   SS_CONFIG := linux
   SS_LINUX := 1
   export SS_LINUX
-  ifdef SS_64
-   SS_CC += -fPIC -m64
-   LIB_DIR := ../lib/Linux64
+  ifeq ($(shell uname -a | cut -f 2 -d ' '),raspberrypi)
+   SS_RPI := 1
+   SS_CC += -fPIC -DRASPBERRYPI
+   LIB_DIR := ../lib/RPi
   else
-   SS_CC += -fPIC -m32
-   LIB_DIR := ../lib/Linux
+   ifdef SS_64
+    SS_CC += -fPIC -m64
+    LIB_DIR := ../lib/Linux64
+   else
+    SS_CC += -fPIC -m32
+    LIB_DIR := ../lib/Linux
+   endif
   endif
   export SS_ABI
   JCONFIG := jconfig.linux
