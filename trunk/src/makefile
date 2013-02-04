@@ -284,6 +284,14 @@ ifndef SS_ANDROID
 all: zlib 
 endif
 
+ifndef SS_MAC
+ifndef SS_IPHONE
+ifndef SS_BLACKBERRY
+#all: openal
+endif
+endif
+endif
+
 ifndef SS_WINRT
 all: curl 
 all: curl-ssl
@@ -345,6 +353,23 @@ endif
 clean::
 	rm -rf $(ZLIB)
 
+	
+# --- OpenAL ----------------------
+OPENAL := openal-soft-1.15.1
+
+openal:$(OPENAL)
+
+$(OPENAL):
+	tar xvzf tars/$(OPENAL).tgz $(TAR_ARGS)
+	@echo $(OS)
+	cd $(OPENAL)/build; cmake
+	cp $(OPENAL)/libopenal-soft$(SS_LIBEXT) $(LIB_DIR)
+ifdef SS_RANLIB
+	$(SS_RANLIB) $(LIB_DIR)/libopenal-soft$(SS_LIBEXT)
+endif
+
+clean::
+	rm -rf $(OPENAL)
 
 
 # --- CURL ------------------------
